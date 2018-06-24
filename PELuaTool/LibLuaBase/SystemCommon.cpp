@@ -11,6 +11,7 @@
 #include <shlobj.h>
 #include <strsafe.h>
 #include <new.h>
+#include <TlHelp32.h>
 
 #pragma warning (disable:4786)
 #pragma comment(lib, "Version")
@@ -1844,6 +1845,11 @@ BOOL CreateFileShortcut(LPCTSTR lpszLnkFileFullPath,LPCTSTR lpszTargetExeFullPat
 	pLink->Release();
 	return SUCCEEDED(hr);
 }
+
+
+
+
+
 // /**
 //  * \brief 函数功能：对指定文件在指定的目录下创建其快捷方式
 //  * 
@@ -1939,4 +1945,127 @@ BOOL CreateFileShortcut(LPCTSTR lpszLnkFileFullPath,LPCTSTR lpszTargetExeFullPat
 // 	return SUCCEEDED(hr);
 // }
 
+}
+
+//
+// 取父进程ID
+//
+DWORD ParentProcessID(LPCTSTR lpProcessName)
+{
+	DWORD Result = 0;
+	DWORD CurrentProcessId = GetCurrentProcessId();
+	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (hSnap != INVALID_HANDLE_VALUE)
+	{
+		PROCESSENTRY32 pe;
+		pe.dwSize = sizeof(PROCESSENTRY32);
+		for (BOOL b = Process32First(hSnap, &pe); b; b = Process32Next(hSnap, &pe))
+		{
+			if (pe.th32ProcessID == CurrentProcessId)
+			{
+				Result = pe.th32ParentProcessID;
+				break;
+			}
+		}
+		CloseHandle(hSnap);
+	}
+	return Result;
+}
+
+// Find process
+// 找指定进程名的进程ID
+//
+DWORD FindProc(LPCTSTR lpProcessName)
+{
+	DWORD Result = 0;
+	DWORD CurrentProcessId = GetCurrentProcessId();
+	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (hSnap != INVALID_HANDLE_VALUE)
+	{
+		PROCESSENTRY32 pe;
+		pe.dwSize = sizeof(PROCESSENTRY32);
+		for (BOOL b = Process32First(hSnap, &pe); b; b = Process32Next(hSnap, &pe))
+		{
+			if (lpProcessName) //取进程ID
+			{
+				if (_tcsicmp(pe.szExeFile, lpProcessName) == 0)
+				{
+					Result = pe.th32ProcessID;
+					break;
+				}
+			}
+		}
+		CloseHandle(hSnap);
+	}
+	return Result;
+}
+
+BOOL KillProcessByName(LPCTSTR lpProcessName)
+{
+	if (!lpProcessName || !lpProcessName[0])
+	{
+		return FALSE;
+	}
+
+	BOOL bResult = FALSE;
+	DWORD ProcessID = 0;
+	do
+	{
+		ProcessID = FindProc(lpProcessName);
+		if (ProcessID)
+		{
+			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, ProcessID);
+			if (hProcess)
+			{
+				if (TerminateProcess(hProcess, 0))
+				{
+					bResult = TRUE;
+				}
+				CloseHandle(hProcess);
+			}
+		}
+	} while (ProcessID > 0);
+
+	return bResult;
+}
+
+//
+// Start service
+//
+BOOL StartServiceByName(LPCTSTR ServiceName)
+{
+	BOOL bResult = FALSE;
+	SC_HANDLE hManager = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+	if (hManager)
+	{
+		SC_HANDLE hService = OpenService(hManager, ServiceName, SERVICE_START | SERVICE_STOP);
+		if (hService)
+		{
+			bResult = StartService(hService, 0, NULL);
+			CloseServiceHandle(hService);
+		}
+		CloseServiceHandle(hManager);
+	}
+	return bResult;
+}
+
+//
+// Stop a service.
+//
+BOOL StopServiceByName(LPCTSTR ServiceName)
+{
+	BOOL bResult = FALSE;
+	SC_HANDLE hManager = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+	if (hManager)
+	{
+		SC_HANDLE hService = OpenService(hManager, ServiceName, SERVICE_START | SERVICE_STOP);
+		if (hService)
+		{
+			SERVICE_STATUS sStatus;
+			bResult = ControlService(hService, SERVICE_CONTROL_STOP, &sStatus);
+			CloseServiceHandle(hService);
+		}
+		CloseServiceHandle(hManager);
+	}
+	return bResult;
 }

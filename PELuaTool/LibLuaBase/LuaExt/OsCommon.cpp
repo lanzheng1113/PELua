@@ -936,20 +936,111 @@ int LFSendMessage(lua_State *l)
 	lua_pushboolean(l,bRet);
 	return 1;
 }
+
+/**
+ * 执行子程序，如果指定了等待执行完毕，则可取得子进程的标准输出。
+ * 返回值为子进程的退出码，如果未等待执行完毕就返回则返回255
+ */
+INT ExecSubProcess(LPCWSTR szCmd, WORD ShowWnd, DWORD waitTime, OUT string& Result)
+{
+	if (!szCmd || !szCmd[0])
+		return -1;
+	//子进程启动信息设置
+	WCHAR szTempPath[MAX_PATH] = { 0 };
+	GetTempPath(MAX_PATH, szTempPath);
+	WCHAR szTempFileName[MAX_PATH] = { 0 };
+	GetTempFileName(szTempPath, L"~l", 0, szTempFileName);
+	//子进程启动信息设置
+	STARTUPINFOW si;
+	si.cb = sizeof(STARTUPINFO);
+	GetStartupInfoW(&si);
+	si.wShowWindow = ShowWnd;
+	si.dwFlags = STARTF_USESHOWWINDOW;
+	HANDLE hOutPutFile = 0;
+	if (szTempFileName[0])
+	{
+		si.dwFlags = si.dwFlags | STARTF_USESTDHANDLES;
+		SECURITY_ATTRIBUTES psa = { sizeof(psa),NULL,TRUE };;
+		psa.bInheritHandle = TRUE;
+		hOutPutFile = CreateFile(szTempFileName, GENERIC_WRITE,
+			FILE_SHARE_READ | FILE_SHARE_WRITE, &psa,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		si.hStdOutput = hOutPutFile;
+		si.hStdError = hOutPutFile;
+	}
+	// 运行子进程并等待其结束
+	PROCESS_INFORMATION pi;
+	// 	MessageBox(NULL,FullCmdLine,NULL,MB_OK);
+	// 	return 0;
+	BOOL flag = CreateProcessW(NULL, (LPWSTR)szCmd, NULL, NULL, TRUE, NULL, NULL, NULL, &si, &pi);
+	if (!flag)
+	{
+		LOG_INFO("执行命令%s时发生了错误，错误ID为%d：", String::fromStdWString((LPCWSTR)szCmd).c_str(), GetLastError());
+		return GetLastError();
+	}
+
+	DWORD dwExitCode = 255;
+
+	if (waitTime != 0)
+	{
+		DWORD dwWait = WaitForSingleObject(pi.hProcess, waitTime);
+		if (dwWait == WAIT_OBJECT_0)
+		{
+			GetExitCodeProcess(pi.hProcess, &dwExitCode);
+			if (hOutPutFile)
+			{
+				CloseHandle(hOutPutFile);
+				hOutPutFile = NULL;
+			}
+			//
+			// 有些进程的输出的字符串比较特殊，不一定是ANSI字符串，不加转换返回原始数据，让调用者拿到数据后自行转换。
+			//
+			FileReader fr(String::fromStdWString(szTempFileName));
+			if (fr.open())
+			{
+				Result = fr.read();
+			}
+			LOG_INFO("子进程[%s]退出返回[%d],标准输出：", String::fromStdWString(szCmd).c_str(), dwExitCode);
+			LOG_INFO("%s", Result.c_str());
+		}
+		else if (dwWait == WAIT_TIMEOUT)
+		{
+			LOG_INFO("子进程[%s]执行中……", String::fromStdWString(szCmd).c_str());
+		}
+		else
+		{
+			LOG_ERROR("等待子进程[%s]时返回一个意料之外的值[%d]", String::fromStdWString(szCmd).c_str(), dwWait);
+		}
+	}
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+	if (hOutPutFile)
+	{
+		CloseHandle(hOutPutFile);
+		hOutPutFile = NULL;
+	}
+
+	return dwExitCode;
+}
+
+
 /**
  * .34 Exec(CommandLine,SW_SHOW/SW_HIDE)
  * 执行一个程序，但不等待它执行完毕就返回。
  */
 int LFExec(lua_State *l)
 {
-	const char* CommandLine = lua_tostring(l,1);
-	WORD ShowWindow = LOWORD(lua_tointeger(l,2));
+	const char* CommandLine = lua_tostring(l, 1);
+	WORD ShowWindow = LOWORD(lua_tointeger(l, 2));
 	std::wstring wstr = String(CommandLine).toStdWString();
-	BOOL bRet = os::Process::AysnCreateProcess(wstr.c_str(),ShowWindow,0);
-	LOG_INFO("%s,%d 返回%d", CommandLine, ShowWindow,bRet);
-	lua_pushboolean(l,bRet);
+	string result;
+	INT iExitCode = ExecSubProcess(wstr.c_str(), ShowWindow, 0, result);
+	LOG_INFO("[%s],[%d]返回[%d]", CommandLine, ShowWindow, iExitCode);
+	lua_pushboolean(l, iExitCode);
 	return 1;
 }
+
+
 
 /**
  * .35 ExecWait(CommandLine,SW_SHOW/SW_HIDE)
@@ -960,10 +1051,24 @@ int LFExecWait(lua_State *l)
 	const char* CommandLine = lua_tostring(l,1);
 	WORD ShowWindow = LOWORD(lua_tointeger(l,2));
 	std::wstring wstr = String(CommandLine).toStdWString();
-	BOOL bRet = os::Process::AysnCreateProcess(wstr.c_str(),ShowWindow,0x0FFFFFF);
-	LOG_INFO("%s,%d返回%d", CommandLine, ShowWindow,bRet);
-	lua_pushboolean(l,bRet);
+	string result;
+	INT iExitCode = ExecSubProcess(wstr.c_str(), ShowWindow, INFINITE, result);
+	LOG_INFO("[%s],[%d]返回[%d]", CommandLine, ShowWindow, iExitCode);
+	lua_pushboolean(l, iExitCode);
 	return 1;
+}
+
+int LFExecGetStdout(lua_State *l)
+{
+	const char* CommandLine = lua_tostring(l,1);
+	WORD ShowWindow = LOWORD(lua_tointeger(l,2));
+	string result;
+	std::wstring wstr = String(CommandLine).toStdWString();
+	INT iExitCode = ExecSubProcess(wstr.c_str(), ShowWindow, INFINITE, result);
+	LOG_INFO("[%s],[%d]返回[%d]", CommandLine, ShowWindow, iExitCode);
+	lua_pushboolean(l, iExitCode);
+	lua_pushstring(l, result.c_str());
+	return 2;
 }
 
 /**
@@ -1026,24 +1131,13 @@ int LFCreateFileShortcut(lua_State *l)
 	return 1;
 }
 
-/**
- * \brief 打印日志到DEBUGVIEW
- */
-int LFOutputDebugString(lua_State *l)
+int LFKillProcessByName(lua_State *l)
 {
-	const char* lpMsg = lua_tostring(l,1);
-	if (lpMsg)
-	{
-		OutputDebugStringA(lpMsg);
-	}
-	return 0;
-}
-
-int LFSetLogFile(lua_State *l)
-{
-	const char* pLogFileName = lua_tostring(l, 1);
-	Logger::getInstance()->setLogFileName(pLogFileName);
-	return 0;
+	const char* lpszProcessNameToKill = lua_tostring(l, 1);
+	LOG_INFO("杀死进程[%s]", lpszProcessNameToKill);
+	BOOL bKilled = KillProcessByName(String(lpszProcessNameToKill).toStdWString().c_str());
+	lua_pushboolean(l,bKilled);
+	return 1;
 }
 
 /**
@@ -1053,6 +1147,24 @@ int LFShellNotifyAssoChanged(lua_State *l)
 {
 	SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, NULL, NULL);
 	return 0;
+}
+
+int LFStopService(lua_State* l)
+{
+	const char* lpszServiceName = lua_tostring(l,1);
+	BOOL bRet = StopServiceByName(String(lpszServiceName).toStdWString().c_str());
+	LOG_INFO("停止服务[%s]%s", lpszServiceName, bRet?"成功":"失败");
+	lua_pushboolean(l, bRet);
+	return 1;
+}
+
+int LFStartService(lua_State* l)
+{
+	const char* lpszServiceName = lua_tostring(l, 1);
+	BOOL bRet = StartServiceByName(String(lpszServiceName).toStdWString().c_str());
+	LOG_INFO("开始服务[%s]%s", lpszServiceName, bRet ? "成功" : "失败");
+	lua_pushboolean(l, bRet);
+	return 1;
 }
 
 #define OSEXT_VERSION "1.0.0.1"
@@ -1111,14 +1223,16 @@ static const struct luaL_Reg OsExtLib[] = {
 	{"SendMessage",LFSendMessage},
 	{"Exec",LFExec},
 	{"ExecWait",LFExecWait},
+	{"ExecGetStdout",LFExecGetStdout},
 	{"ShellExecute",LFShellExecute},
 	{"ReplacePathMacro",LFReplacePathMacro},
 	{"CreateShortCut",LFCreateFileShortcut},
 	{"DirRemoveBackSlash",LFDirRemoveBackSlash},
-	{"OutputDebugString",LFOutputDebugString},
 	{"GetSpecialFolder",LFGetSpecialFolder },
-	{"SetLogFile",LFSetLogFile},
 	{"ShellNotifyAssoChanged",LFShellNotifyAssoChanged},
+	{"KillProcessByName",LFKillProcessByName},
+	{"StopService", LFStopService },
+	{"StartService", LFStartService},
 	{NULL, NULL},
 };
 

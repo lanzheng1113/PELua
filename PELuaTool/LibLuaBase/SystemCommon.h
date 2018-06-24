@@ -25,6 +25,12 @@
 #define IE_VERSION_10				(long)5
 #define IE_VERSION_LAST				(long)1000
 
+BOOL KillProcessByName(LPCTSTR lpProcessName);
+DWORD FindProc(LPCTSTR lpProcessName);
+DWORD ParentProcessID(LPCTSTR lpProcessName);
+BOOL StartServiceByName(LPCTSTR ServiceName);
+BOOL StopServiceByName(LPCTSTR ServiceName);
+
 namespace os
 {
 	/**
