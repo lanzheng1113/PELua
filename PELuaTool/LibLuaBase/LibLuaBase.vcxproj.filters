@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\common">
+      <UniqueIdentifier>{8622fac7-23a1-468b-ac0b-048dfc06061f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\luaext">
+      <UniqueIdentifier>{2bbbb410-07be-45ca-9a0f-79d301901587}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\common">
+      <UniqueIdentifier>{e5f26249-8154-4cf3-a93e-ac88d603cbe4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\luaext">
+      <UniqueIdentifier>{ac7cfe25-a82c-440d-84e0-28c439c65087}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaExt\lfs.h">
+      <Filter>头文件\luaext</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaExt\OsCommon.h">
+      <Filter>头文件\luaext</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaExt\RegIni.h">
+      <Filter>头文件\luaext</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemCommon.h">
+      <Filter>头文件\common</Filter>
+    </ClInclude>
+    <ClInclude Include="AmLog.h">
+      <Filter>头文件\common</Filter>
+    </ClInclude>
+    <ClInclude Include="LibLuaExt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="nsisFirewall.h">
+      <Filter>头文件\common</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaExt\Firewall.h">
+      <Filter>头文件\luaext</Filter>
+    </ClInclude>
+    <ClInclude Include="Macros.h">
+      <Filter>头文件\common</Filter>
+    </ClInclude>
+    <ClInclude Include="EncryptDataFileDef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DeleteAgent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaExt\lfs.cpp">
+      <Filter>源文件\luaext</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaExt\OsCommon.cpp">
+      <Filter>源文件\luaext</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaExt\RegIni.cpp">
+      <Filter>源文件\luaext</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemCommon.cpp">
+      <Filter>源文件\common</Filter>
+    </ClCompile>
+    <ClCompile Include="nsisFirewall.cpp">
+      <Filter>源文件\common</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaExt\Firewall.cpp">
+      <Filter>源文件\luaext</Filter>
+    </ClCompile>
+    <ClCompile Include="Macro.cpp">
+      <Filter>源文件\common</Filter>
+    </ClCompile>
+    <ClCompile Include="LibLuaExt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

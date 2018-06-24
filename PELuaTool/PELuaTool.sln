@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PELuaTool", "PELuaTool\PELuaTool.vcxproj", "{B5176459-E9A2-4790-9391-426FFCB98676}"
+	ProjectSection(ProjectDependencies) = postProject
+		{212B7C58-9581-4DB6-A51D-007255DBFA2F} = {212B7C58-9581-4DB6-A51D-007255DBFA2F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibLuaBase", "LibLuaBase\LibLuaBase.vcxproj", "{212B7C58-9581-4DB6-A51D-007255DBFA2F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PECMD", "PECMD\PECMD.vcxproj", "{5B5CA445-6E02-40DD-A84A-0FC6F5AEAE18}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5176459-E9A2-4790-9391-426FFCB98676}.Debug|x64.ActiveCfg = Debug|x64
+		{B5176459-E9A2-4790-9391-426FFCB98676}.Debug|x64.Build.0 = Debug|x64
+		{B5176459-E9A2-4790-9391-426FFCB98676}.Debug|x86.ActiveCfg = Debug|Win32
+		{B5176459-E9A2-4790-9391-426FFCB98676}.Debug|x86.Build.0 = Debug|Win32
+		{B5176459-E9A2-4790-9391-426FFCB98676}.Release|x64.ActiveCfg = Release|x64
+		{B5176459-E9A2-4790-9391-426FFCB98676}.Release|x64.Build.0 = Release|x64
+		{B5176459-E9A2-4790-9391-426FFCB98676}.Release|x86.ActiveCfg = Release|Win32
+		{B5176459-E9A2-4790-9391-426FFCB98676}.Release|x86.Build.0 = Release|Win32
+		{212B7C58-9581-4DB6-A51D-007255DBFA2F}.Debug|x64.ActiveCfg = Debug|Win32
+		{212B7C58-9581-4DB6-A51D-007255DBFA2F}.Debug|x86.ActiveCfg = Debug|Win32
+		{212B7C58-9581-4DB6-A51D-007255DBFA2F}.Debug|x86.Build.0 = Debug|Win32
+		{212B7C58-9581-4DB6-A51D-007255DBFA2F}.Release|x64.ActiveCfg = Release|Win32
+		{212B7C58-9581-4DB6-A51D-007255DBFA2F}.Release|x86.ActiveCfg = Release|Win32
+		{212B7C58-9581-4DB6-A51D-007255DBFA2F}.Release|x86.Build.0 = Release|Win32
+		{5B5CA445-6E02-40DD-A84A-0FC6F5AEAE18}.Debug|x64.ActiveCfg = Debug|Win32
+		{5B5CA445-6E02-40DD-A84A-0FC6F5AEAE18}.Debug|x86.ActiveCfg = Debug|Win32
+		{5B5CA445-6E02-40DD-A84A-0FC6F5AEAE18}.Debug|x86.Build.0 = Debug|Win32
+		{5B5CA445-6E02-40DD-A84A-0FC6F5AEAE18}.Release|x64.ActiveCfg = Release|Win32
+		{5B5CA445-6E02-40DD-A84A-0FC6F5AEAE18}.Release|x86.ActiveCfg = Release|Win32
+		{5B5CA445-6E02-40DD-A84A-0FC6F5AEAE18}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
