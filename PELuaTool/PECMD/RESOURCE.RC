@@ -18,13 +18,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文(中华人民共和国) resources
+// 中文(简体，中国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
-#ifdef _WIN32
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 #pragma code_page(936)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -65,7 +63,9 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_Main                ICON                    "Resource\\Main.ico"
+
 IDI_ICON1               ICON                    "Resource\\TRAY.ICO"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -73,6 +73,7 @@ IDI_ICON1               ICON                    "Resource\\TRAY.ICO"
 //
 
 IDR_Help                RCDATA                  "Resource\\Help.txt"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -99,7 +100,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_Help, DIALOG
     BEGIN
@@ -115,7 +116,7 @@ END
 // Menu
 //
 
-IDR_MENU1 MENU 
+IDR_MENU1 MENU
 BEGIN
     POPUP "PECMD_TrayPopupMenu"
     BEGIN
@@ -152,7 +153,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_CmdErr              "执行错误："
     IDS_FoundDevice         "\r\n找到设备: %s"
@@ -172,7 +173,7 @@ BEGIN
     IDS_SetTempFolder       "设置临时文件夹。"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_NewTempFolder       "选择新的临时文件夹。"
     IDS_PassWordErrorMsg    "你%d次输入的密码错误，是否重新启动？\r\n选择[是]则重启，[否]则关机。"
@@ -187,7 +188,7 @@ BEGIN
     IDS_Hotk                "Ctrl + Alt + #0x41,PECMD.EXE DISP W800H600B16F75"
 END
 
-#endif    // 中文(中华人民共和国) resources
+#endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

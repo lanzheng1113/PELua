@@ -17,7 +17,7 @@ extern "C"
 #endif // DEBUG
 
 
-
+int luaopen_PE(lua_State* l);
 lua_State *LuaS; //全局唯一的LUA解释器指针。
 /**
  * \brief 初始化LUA解释器、导入LUA标准库、导入铠甲拓展库和CJson库
@@ -27,6 +27,7 @@ static void initLuaScript()
 	LuaS = lua_open();		//初始化指针
 	luaL_openlibs(LuaS);	//打开标准库
 	LuaOpenExtendLib(LuaS); //打开我们的扩展库
+	luaopen_PE(LuaS);
 	//luaopen_cjson(LuaS);	//打开CJson库
 	return;
 }
