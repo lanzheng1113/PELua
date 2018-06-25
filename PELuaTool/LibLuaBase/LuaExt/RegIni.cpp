@@ -419,7 +419,8 @@ namespace LuaExt
 			if (RegOpenKeyEx(hKey, wstrRegSubKey.c_str(), 0, AlterRegistrySAM(KEY_READ), &hKey) == ERROR_SUCCESS)
 			{
 				BYTE buffer[4096] = {0};
-				DWORD len = 4096*sizeof(TCHAR);
+				DWORD len = 4096;
+				memset(buffer, 0, sizeof(buffer)); //Make sure the buffer is always terminated by NULL.
 				DWORD dwType;
 
 				// Jim Park: If plain text in p or binary data in p,
@@ -439,6 +440,70 @@ namespace LuaExt
 					else
 					{
 						strRet = "";
+					}
+				}
+				RegCloseKey(hKey);
+			}
+
+			return strRet;
+		}
+
+		std::vector<std::string> ReadRegMultiStr(const std::string& strRegRoot, const std::string& strRegSubKey, const std::string& strRegName)
+		{
+			std::vector<std::string> strRet;
+			HKEY hKey = KeyRootFromShortName(strRegRoot);
+			if (0 == hKey)
+			{
+				return strRet;
+			}
+
+			std::wstring wstrRegSubKey = String(strRegSubKey).toStdWString();
+			if (RegOpenKeyEx(hKey, wstrRegSubKey.c_str(), 0, AlterRegistrySAM(KEY_READ), &hKey) == ERROR_SUCCESS)
+			{
+				BYTE buffer[4096] = { 0 };
+				DWORD len = sizeof(buffer);
+				memset(buffer, 0, sizeof(buffer));//Make sure the buffer is always terminated by NULL.
+				DWORD dwType;
+
+				// Jim Park: If plain text in p or binary data in p,
+				// user must be careful in accessing p correctly.
+				std::wstring wstrRegName = String(strRegName).toStdWString();
+				if (RegQueryValueEx(hKey, wstrRegName.c_str(), NULL, &dwType, (LPBYTE)buffer, &len) != ERROR_SUCCESS ||
+					(dwType != REG_SZ && dwType != REG_EXPAND_SZ && dwType != REG_MULTI_SZ))
+				{
+					;
+				}
+				else
+				{
+					buffer[4096 - 1] = 0; // RegQueryValueEx adds a null terminator, UNLESS the value is buffer max long
+					if (dwType == REG_SZ || dwType == REG_EXPAND_SZ)
+					{
+						std::wstring wstr = (wchar_t*)buffer;
+						strRet.push_back(String::fromStdWString(wstr));
+					}
+					else if (dwType == REG_MULTI_SZ)
+					{
+						PWCHAR pszInfo = (PWCHAR)buffer;
+						while (*pszInfo != 0)
+						{
+							strRet.push_back(String::fromStdWString(std::wstring(pszInfo)));
+							do
+							{
+								pszInfo++;
+							} while (*pszInfo && (ULONG_PTR)pszInfo < (ULONG_PTR)buffer + len);
+
+							pszInfo++;
+							// Make sure not exceed end.
+							if ((ULONG_PTR)pszInfo >= (ULONG_PTR)buffer + len)
+							{
+								break;
+							}
+						}
+						
+					}
+					else
+					{
+						_ASSERT(0);
 					}
 				}
 				RegCloseKey(hKey);
@@ -822,6 +887,35 @@ int LFReadEnvStr(lua_State* l)
 	return 1;
 }
 
+/**
+ * \brief 展开一个带有环境变量的字符串
+ * 
+ * - 参数1 需要展开的字符串
+ * 
+ * 返回一个展开环境变量后的字符串。
+ */
+int LFExpandStr(lua_State* l)
+{
+	const char* pToExpandStr = lua_tostring(l, 1);
+	if (!pToExpandStr)
+	{
+		lua_pushstring(l,"");
+	}
+	else
+	{
+		//
+		// 超过1024个字符不处理
+		// 如需处理只需要判断ExpandEnvironmentStringsA的返回值是否大于1024即可
+		//
+		CHAR Temp[1024] = {0};
+		ExpandEnvironmentStringsA(pToExpandStr, Temp, 1024);
+		lua_pushstring(l, Temp);
+	}
+	
+	return 1;
+}
+
+
 /*
  * \brief LUA 导出接口RegIni.ReadINIStr的实现。RegIni.ReadINIStr从INI中读取一个键的值。
  * \param l LUA栈参数。栈中三个RegIni.ReadINIStr的参数：
@@ -885,6 +979,41 @@ int LFReadRegStr(lua_State* l)
 	String strRegName = ((TempPtr = lua_tostring(l,3)) ? TempPtr : "");
 	std::string strRet = LuaExt::RegIni::ReadRegStr(strRegRoot,strRegSubKey,strRegName);
 	lua_pushstring(l,strRet.c_str());
+	return 1;
+}
+
+/**
+ * \brief 读取多个字符串
+ * - 参数1 根键
+ * - 参数2 子键
+ * - 参数3 键名
+ * \return 
+ *  返回一个table,每一个元素代表一行。如果为空代表无此值。
+ * \remark:
+ *  函数支持REG_SZ,REG_EXPAND_SZ,REG_SZ_MULTI类型，对于前两种函数返回的TABLE只有一个元素。
+ * For example:
+ *
+ * local TableOfMultiLine = ReadRegMutiStr("HKLM","SoftWare\\YourCompany\\YourProduct","ValueName")
+ * for key,value in pairs(TableOfEnumRegKey) do
+ *	   print("key: " .. tostring(key) .. ", value: " .. tostring(value))
+ * end
+ */
+int LFReadRegMutiStr(lua_State* l)
+{
+	String strRegRoot = ((TempPtr = lua_tostring(l, 1)) ? TempPtr : "");
+	String strRegSubKey = ((TempPtr = lua_tostring(l, 2)) ? TempPtr : "");
+	String strRegName = ((TempPtr = lua_tostring(l, 3)) ? TempPtr : "");
+	std::vector<std::string> strListOfMultiLine = LuaExt::RegIni::ReadRegMultiStr(strRegRoot, strRegSubKey, strRegName);
+	/* create table. */
+	lua_newtable(l);
+	/* push (key, value). */
+	for (int i = 0; i != strListOfMultiLine.size(); i++)
+	{
+		lua_pushinteger(l, i + 1); //从1开始
+		lua_pushstring(l, strListOfMultiLine[i].c_str());
+		lua_settable(l, -3);
+	}
+	/* deal return. */
 	return 1;
 }
 
@@ -1075,12 +1204,14 @@ static const struct luaL_Reg RgeIniLib[] = {
 	{"EnumRegValue", LFEnumRegValue},
 	{"ReadRegDWORD", LFReadRegDWORD},
 	{"ReadRegStr", LFReadRegStr},
+	{"ReadRegMutiStr", LFReadRegMutiStr },
 	{"SetRegView", LFSetRegView},
 	{"WriteRegBin", LFWriteRegBin},
 	{"WriteRegDWORD", LFWriteRegDWORD},
 	{"WriteRegStr", LFWriteRegStr},
 	{"WriteRegExpandStr", LFWriteRegExpandStr},
 	{"ReadEnvStr", LFReadEnvStr},
+	{"ExpandStr", LFExpandStr},
 	{NULL, NULL},
 };
 

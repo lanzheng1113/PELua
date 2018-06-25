@@ -1167,6 +1167,15 @@ int LFStartService(lua_State* l)
 	return 1;
 }
 
+int LFSetFileAttributes(lua_State* l)
+{
+	const char* lpszFileOrDir = lua_tostring(l, 1);
+	DWORD attr = lua_tointeger(l, 2);
+	BOOL bRet = SetFileAttributesA(lpszFileOrDir, attr);
+	lua_pushboolean(l, bRet);
+	return 1;
+}
+
 #define OSEXT_VERSION "1.0.0.1"
 #define OSEXT_LIBNAME "OsExt"
 /*
@@ -1233,6 +1242,7 @@ static const struct luaL_Reg OsExtLib[] = {
 	{"KillProcessByName",LFKillProcessByName},
 	{"StopService", LFStopService },
 	{"StartService", LFStartService},
+	{"SetFileAttributes", LFSetFileAttributes },
 	{NULL, NULL},
 };
 
