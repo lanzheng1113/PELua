@@ -38,7 +38,7 @@ function 注册Soft2()
 	注册表写整数("HKLM","SOFTWARE\\Microsoft\\Internet Explorer\\TabbedBrowsing","NewTabpageShow",0)
 	注册表写整数("HKLM","SOFTWARE\\Microsoft\\Internet Explorer\\TabbedBrowsing","ThumbnailBehavior",0)
 	注册表写整数("HKCU","Software\\StartIsBack","StartMetroApps",0)
-	注册表写整数("HKCU","Software\StartIsBack","Start_NotifyNewApps",0)
+	注册表写整数("HKCU","Software\\StartIsBack","Start_NotifyNewApps",0)
 	注册表写字符串("HKCU","SOFTWARE\\Microsoft\\Internet Explorer\\New Windows","PopupMgr","yes")
 	注册表写整数("HKCU","SOFTWARE\\Microsoft\\Internet Explorer\\New Windows","PlaySound",0)
 	注册表写整数("HKCU","SOFTWARE\\Microsoft\\Internet Explorer\\New Windows","UseSecBand",0)
@@ -59,10 +59,10 @@ function 注册Soft2()
 	注册表写整数("HKCU","Software\\Microsoft\\Internet Explorer\\Main","RunOnceComplete",1)
 	注册表写整数("HKCU","Software\\Microsoft\\Internet Explorer\\Main","DisableFirstRunCustomize",1)
 	注册表写整数("HKLM","SOFTWARE\\Microsoft\\Internet Explorer\\Main","DisableFirstRunCustomize",1)
-	注册表写整数("HKLM","SOFTWARE\\Policies\\Microsoft\\Internet Explorer\\Infodelivery\Restrictions","NoUpdateCheck",1)
+	注册表写整数("HKLM","SOFTWARE\\Policies\\Microsoft\\Internet Explorer\\Infodelivery\\Restrictions","NoUpdateCheck",1)
 	注册表写整数("HKCU","Software\\Microsoft\\Internet Explorer\\TabbedBrowsing","WarnOnClose",0)
 	注册表写字符串("HKCU","Software\\Microsoft\\Internet Explorer\\Main","Use FormSuggest","yes")
-	注册表写整数("HKLM","SOFTWARE\\Microsoft\\Internet Explorer\MAIN","DEPOff",1)
+	注册表写整数("HKLM","SOFTWARE\\Microsoft\\Internet Explorer\\MAIN","DEPOff",1)
 	注册表写字符串("HKCU","Software\\Microsoft\\Internet Explorer\\Main","Enable AutoImageResize","yes")
 	注册表写整数("HKCU","Software\\Microsoft\\Internet Explorer\\Suggested Sites","Enabled",0)
 	注册表写整数("HKCU","Software\\Microsoft\\Internet Explorer\\Main","NoUpdateCheck",1)
@@ -83,7 +83,7 @@ function 注册Soft2()
 		执行子进程并等待它完成("cmd.exe /c X:\\PEPrograms\\X86Soft2\\磁盘光盘\\ULTRAISO\\ULTRAISO.CMD",NULL,SW_HIDE)
 	end
 	if 存在路径("X:\\PEPrograms\\X86Soft2\\文件工具\\IMAGINE\\IMAGINE.EXE") then
-		OsExt.ExecWait("X:\\PEPrograms\\X86Soft2\\文件工具\\IMAGINE\IMAGINE.EXE /assocext")
+		OsExt.ExecWait("X:\\PEPrograms\\X86Soft2\\文件工具\\IMAGINE\\IMAGINE.EXE /assocext")
 	end
 	
 	-- 向日葵注册表处理，新版本号要增加
@@ -104,7 +104,7 @@ function 注册Soft2()
 	-- 桌面快捷方式
 	桌面目录 = 获取桌面目录()
 	创建快捷方式 = OsExt.CreateShortCut
-	if not 存在路径("X:\WXPE") then
+	if not 存在路径("X:\\WXPE") then
 		创建快捷方式(桌面目录 .. "\\远程控制AnyDesk.lnk","X:\\PEPrograms\\X86Soft2\\实用工具\\AnyDesk.exe")
 	end
 	创建快捷方式(桌面目录 .. "\\远程控制向日葵.lnk","X:\\PEPrograms\\X86Soft2\\实用工具\\Sunlogin.exe")
@@ -211,7 +211,7 @@ function 注册Soft2()
 		创建快捷方式(开始菜单程序目录 .. "\\实用工具\\资料.lnk", "X:\\PEPrograms\\X86Soft2\\实用工具\\ARTICLE")
 	end
 	if 存在路径("X:\\PEPrograms\\X86Soft2\\实用工具\\Hash_1.0.4_XiaZaiBa.exe") then
-		创建快捷方式(开始菜单程序目录 .. "\\实用工具\MD5校验工具.lnk", "X:\\PEPrograms\\X86Soft2\\实用工具\\Hash_1.0.4_XiaZaiBa.exe")
+		创建快捷方式(开始菜单程序目录 .. "\\实用工具\\MD5校验工具.lnk", "X:\\PEPrograms\\X86Soft2\\实用工具\\Hash_1.0.4_XiaZaiBa.exe")
 	end
 	if 存在路径("X:\\PEPrograms\\X86Soft2\\实用工具\\MiniGet\\MiniGet.exe") then
 		创建快捷方式(开始菜单程序目录 .. "\\实用工具\\下载工具.lnk", "X:\\PEPrograms\\X86Soft2\\实用工具\\MiniGet\\MiniGet.exe")

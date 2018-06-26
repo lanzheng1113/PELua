@@ -790,7 +790,7 @@ function setup()
 	-- 将原来放到Y盘的WIM解压到PEProgram -- 
 	--
 	写桌面文本("正在加载相关工具.....",RGB红色,字体,字体大小,-1,-1, -1, -1)
-	dofile("main.lua")
+	dofile("X:\\Windows\\main.lua")
 end
 
 setup()

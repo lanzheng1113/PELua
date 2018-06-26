@@ -1,4 +1,4 @@
-dofile("const.lua")
+dofile("X:\\Windows\\const.lua")
 
 -- 前置定义导出函数的中文别名 --
 弹窗提示 = OsExt.MessageBox
