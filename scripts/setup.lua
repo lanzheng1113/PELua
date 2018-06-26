@@ -225,7 +225,7 @@ function 安装驱动(驱动包路径, 安装位置)
 	
 	-- 如果是custom*.7z或者是custom_64*.7z安装驱动前先保存一下现有的设备数
 	local ID1, ID2
-	if fname.find("custom") or fname.find("custom_64") then
+	if nil ~= string.find(fname,"custom") or nil ~= string.find(fname,"custom_64") then
 		ID1 = hwids()
 	end
 	
@@ -246,7 +246,7 @@ function 安装驱动(驱动包路径, 安装位置)
 	OsExt.Sleep(500)
 	
 	-- 如果是custom*.7z或者是custom_64*.7z安装驱动后在临时目录尝试重新安装一次
-	if fname.find("custom") or fname.find("custom_64") then
+	if nil ~= string.find(fname,"custom") or nil ~= string.find(fname,"custom_64") then
 		ID2 = hwids()
 		if ID1 ~= nil and ID2 ~=nil and ID1 < ID2 then
 			执行子进程并等待它完成("cmd.exe /c dpinst.exe /S /Path " .. os.getenv("temp") .. "\\pe-driver\\" .. fname)
@@ -254,7 +254,7 @@ function 安装驱动(驱动包路径, 安装位置)
 	end
 	
 	-- 如果是DRIVERS_USB*.7z，安装驱动后在临时目录尝试重新安装一次。
-	if fname.find("DRIVERS_USB") then
+	if nil ~= string.find(fname,"DRIVERS_USB") then
 		执行子进程并等待它完成("cmd.exe /c dpinst.exe /S /Path " .. os.getenv("temp") .. "\\pe-driver\\" .. fname)
 	end
 	
