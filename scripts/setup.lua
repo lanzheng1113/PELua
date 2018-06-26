@@ -769,9 +769,10 @@ function setup()
 	创建目录(开始菜单程序目录 .. "\\硬件驱动")
 	创建目录(开始菜单程序目录 .. "\\系统维护")
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\网络管理.lnk","X:\\Program Files\\PENetwork\\PENetwork.exe")
-	创建快捷方式(开始菜单程序目录 .. "\\硬件驱动\\网卡万能驱动.lnk","X:\\Program Files\\Network\\[Network]WanDrv6.exe")
+	if 存在路径("X:\\Program Files\\Network\\[Network]WanDrv6.exe") then
+		创建快捷方式(开始菜单程序目录 .. "\\硬件驱动\\网卡万能驱动.lnk","X:\\Program Files\\Network\\[Network]WanDrv6.exe")
+	end
 	-- LINK %programs%\硬件驱动\加载无线网卡,%windir%\system32\pecmd.exe,"%ProgramFiles%\wifi.wcs",%windir%\system32\netshell.dll#157
-	-- 创建快捷方式(开始菜单程序目录 .. "\\硬件驱动\\加载无线网卡.lnk","X:\\Program Files\\Network\\[Network]WanDrv6.exe")
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\任务管理器.lnk","X:\\Windows\\System32\\taskmgr.exe")
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\7z文件.lnk","X:\\Program Files\\7-zip\\7zFM.exe")
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\浏览器.lnk","X:\\Program Files (x86)\\TheWorld\\Application\\theworld.exe")
