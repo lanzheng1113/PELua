@@ -24,52 +24,113 @@ FILE_ATTRIBUTE_HIDDEN = 0x02
 RGB红色 = 0xFF0000
 字体 = "Microsoft YaHei"
 字体大小 = 20
+
 -- 导出方法别名设置 --
 存在路径 = OsExt.PathFileExist
 设置LOGO = PEExt.SetLogo
 设置墙纸 = PEExt.SetDesktopWallPaper
 取屏幕大小 = PEExt.GetDesktopSize
 执行子进程并等待它完成 = OsExt.ExecWait
+
+--
+-- ExecGetStdout 执行子进程并取标准输出
+-- 参数1 子进程的命令行
+-- 参数2 指定是否显示子进程的窗口。SW_HIDE/SW_SHOW
+-- 返回两个值。第一个是进程退出码，如果进程执行失败了那么返回255。第二个返回值是子进程的标准输出
+--
 执行子进程并取标准输出 = OsExt.ExecGetStdout
-创建目录 = OsExt.CreateDir        -- 父目录必须存在,否则会失败
+
+--
+-- OsExt.CreateDir创建一个目录，父目录必须存在,否则会失败
+-- 参数1 需要创建目录的全路径
+-- 返回一个boolean值代表成功或者失败
+--
+创建目录 = OsExt.CreateDir
+
+-- 
+-- PEExt.INIT 初始化PE，同PECMD的INIT I。去掉了PECMD INIT命令的各种参数
+-- 无参数
+-- 返回一个boolean值代表成功或者失败
+-- 
 初始化PE = PEExt.INIT
+
+--
+-- PEExt.SetEnvironment 设置环境变量
 -- 参数1 环境变量名
 -- 参数2 环境变量对应的值
+--
 设置环境变量 = PEExt.SetEnvironment
+
+--
+-- 取环境变量 如os.getenv("windir") 等于 %windir%
+--
 获取环境变量 = os.getenv
+
+--
 -- 杀死参数所指定的所有进程
 -- 参数1 进程名(xxx.exe)
+--
 杀死进程=OsExt.KillProcessByName
+
+--
 -- 等待一段时间
 -- 参数1 等待的毫秒数
+--
 等待=OsExt.Sleep
+
 -- 停止一个服务
 -- 参数1 服务名
 关闭服务=OsExt.StopService
+
 -- 参数1 进程路径+进程参数
 -- 参数2 显示子进程窗口：SW_SHOW；隐藏子进程窗口：SW_HIDE
 执行子进程 = OsExt.Exec
+
 -- 参数列表： 文本，颜色，字体，字体大小，X坐标，Y坐标
 -- 如果X,Y坐标都设置为-1，则表示置顶居中显示
 写桌面文本 = PEExt.SetDesktopText
+
 注册表写整数 = RegIni.WriteRegDWORD
 注册表写字符串 = RegIni.WriteRegStr
 注册表读文本 = RegIni.ReadRegStr
 注册表读整数 = RegIni.ReadRegDWORD
 注册表删除子项 = RegIni.DeleteRegKey
 注册表删除键值 = RegIni.DeleteRegValue
+
 --
 -- RegIni.ReadRegMutiStr返回一个table,其中每一项都是一个字符串。
 --
 注册表读MULTI_SZ = RegIni.ReadRegMutiStr
+
+--
 -- 删除一个文件，如果被占用则重命名并标记为重启后删除。
+--
 删除文件 = OsExt.DeepDeleteFile
+
+--
+-- 递归删除一个目录下的所有文件和子目录
+--
 删除目录 = OsExt.RemoveDirectoryRecursively
+
+--
 -- 加载显示U盘分区，未实现
+--
 加载显示U盘分区 = PEExt.ShowUSBDisk
+
+-- 
+-- 展开一个带有环境变量的字符串
+--
 字符串_展开环境变量 = OsExt.ExpandStr
+
+--
+-- 创建一个文件的快捷方式
+-- 参数1 快捷方式全路径
+-- 参数2 源文件全路径
+--
 创建快捷方式 = OsExt.CreateShortCut
+
 设置文件或文件夹属性 = OsExt.SetFileAttributes
+
 ProgramFiles目录 = "X:\\Program Files"
 
 
@@ -98,7 +159,7 @@ function reverse_find(str, token)
 		-- 如果没有找到标记，那么返回整个原字符串
 		return str
 	end
-	m = string.len(ts) - pEnd + 1
+	m = string.len(rs) - pEnd + 1
 	return string.sub(str,1,m) 
 end
 
@@ -391,7 +452,9 @@ function string_ends_with(str,substr)
 end
 
 
-
+--
+-- 安装X:\\Windows\\inf\\OEM*.INF
+--
 function 安装OEM_INF()
 	local count = 0
 	local OEM_INF目录 = "X:\\Windows\\inf"
@@ -405,7 +468,7 @@ function 安装OEM_INF()
 					-- 寻找oem*.inf 
 					if 1 == string.find(file, "oem") and string_ends_with(file, ".inf") then
 						Log.info("找到了OEM_INF:" .. file)
-						注册表读MULTI_SZ("HKLM","DRIVERS\\DriverDatabase\\DriverInfFiles\\",file)
+						orz = 注册表读MULTI_SZ("HKLM","DRIVERS\\DriverDatabase\\DriverInfFiles\\",file)
 						if table.getn(orz) == 0 then
 							Log.info("安装OEM驱动:" .. file)
 							执行子进程并等待它完成("cmd.exe /c drvload " .. full_path)
@@ -464,9 +527,10 @@ end
 
 
 function setup()
-	-- 如果是64位系统则禁用WOW64文件重定向 --
+	-- 如果是64位系统则禁用WOW64文件重定向和禁用注册表重定向 --
 	if OsExt.IsWow64() then
 		OsExt.DisableWow64FsRedir()
+		RegIni.SetRegView(64)
 	end
 	-- 设置日志路径 --
 	Log.SetLogFile("X:\\Windows\\PESetup.log")
@@ -512,9 +576,10 @@ function setup()
 	-- 
 	执行子进程并等待它完成( "cmd.exe /c regsvr32 /s " .. "\"" .. ProgramFiles目录 .. "\\Classic Shell\\StartMenuHelper64.dll\"", SW_HIDE)
 	执行子进程("\"" .. ProgramFiles目录 .. "\\Classic Shell\\ClassicStartMenu.exe\"", SW_HIDE)
-	if not 执行子进程并等待它完成("X:\\Windows\\System32\\winpeshl.exe", SW_SHOW) then
+	local iRet = 执行子进程并等待它完成("X:\\Windows\\System32\\winpeshl.exe", SW_SHOW) 
+	if iRet ~= 0 then
 		Log.error("=====================================================")
-		Log.error("         执行winpeshl.exe失败,错误id=" .. tostring(OsExt.GetLastError()))
+		Log.error("         执行winpeshl.exe失败,错误id=" .. tostring(iRet))
 		Log.error("=====================================================")
 	end
 	Public目录 = 获取环境变量("PUBLIC")
@@ -626,7 +691,8 @@ function setup()
 	
 	-- 处理无线网卡
 	-- 1,在setupapi.dev.log中查找，调用devcon删除msdri.inf
-	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c find \"msdri.inf\'\" %windir%\\inf\\setupapi.dev.log", SW_HIDE)
+	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c find \"msdri.inf\'\" " .. os.getenv("windir") .. "\\inf\\setupapi.dev.log", SW_HIDE)
+	-- 这里有问题，执行的结果永远为空。
 	msdri_inf_0x00 = string.find(子进程标准输出, "0x00", 1)
 	if nil ~= msdri_inf_0x00 then
 		posbeg = string.find(子进程标准输出, "Published", 1) 
@@ -663,6 +729,9 @@ function setup()
 	--
 	-- 安装声卡驱动
 	--
+	Log.info("=========================================")
+	Log.info("          正在安装声卡驱动……")
+	Log.info("=========================================")
 	local env_windir = os.getenv("windir")
 	local b,s = 执行子进程并取标准输出("cmd.exe /c drvload " .. env_windir .. "\\inf\\hdaudss.inf " .. env_windir .. "\\inf\\hdaudio.inf")
 	Log.info("b = " .. tostring(b) .. ",s=" .. s)
@@ -738,6 +807,9 @@ function setup()
 	--
 	-- 运行即插即用支持脚本
 	--
+	Log.info("======================================")
+	Log.info("           处理即插即用")
+	Log.info("======================================")
 	执行子进程并等待它完成("cmd.exe /c \"" .. ProgramFiles目录 .. "\\hotplug.bat\" pci",SW_HIDE)
 	
 	执行子进程("X:\\Windows\\System32\\taskmgr.exe",SW_HIDE)
@@ -756,10 +828,14 @@ function setup()
 	--     IKEEXT 服务托管 Internet 密钥交换(IKE)和身份验证 Internet 协议(AuthIP)键控模块。
 	关闭服务("IKEEXT")
 	-- 2 安装驱动
+	Log.info("=========================================================")
+	Log.info("安装RNDIS(远端网络驱动接口协议)驱动，用于支持手机、USB网卡上网。")
+	Log.info("=========================================================")
 	local x_windows = os.getenv("windir")
 	执行子进程并等待它完成("cmd.exe /c drvload " .. x_windows .. "\\inf\\netrndis.inf " .. x_windows .. "\\inf\\wceisvista.inf")
 	-- 3 将IKEEXT服务设置为按需启动
 	注册表写整数("HKLM","SYSTEM\\ControlSet001\\Services\\IKEEXT\\start",3)
+	杀死进程("taskmgr.exe")
 	杀死进程("taskmgr.exe")
 	
 	--
