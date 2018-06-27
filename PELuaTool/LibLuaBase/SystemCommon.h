@@ -40,6 +40,27 @@ namespace os
 	* \param lpszTargetExeFullPath  快捷方式名称，为NULL表示EXE文件名。
 	*/
 	BOOL CreateFileShortcut(LPCTSTR lpszLnkFileFullPath,LPCTSTR lpszTargetExeFullPath);
+
+	/**
+	 * \brief 创建快捷方式，允许制定所有参数
+	 *
+	 * \param wstrLnkFileFullPath 快捷方式链接的位置
+	 * \param wstrTargetExeFullPath 快捷方式指向的目标
+	 * \param wstrParam 制定快捷方式的参数
+	 * \param wstrIcon 指定快捷方式的图标
+	 * \param IconIndex 制定快捷方式图标的序号
+	 * \param wstrWorkDir 制定工作目录，如果为空则自动从wstrTargetExeFullPath中截取
+	 *
+	 * \return 成功返回TRUE,否则返回FALSE
+	 */
+	BOOL CreateFileShortcutEx(
+		const std::wstring& wstrLnkFileFullPath,
+		const std::wstring& wstrTargetExeFullPath,
+		const std::wstring& wstrParam,
+		const std::wstring& wstrIcon,
+		ptrdiff_t IconIndex,
+		const std::wstring& wstrWorkDir);
+
 	//////////////////////////////////////////////////////////////////////////
 	// 文件创建相关的
 	namespace FilePath

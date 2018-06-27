@@ -74,6 +74,14 @@ extern "C"
  * \{
  */
 
+#ifndef WS2S
+#define WS2S(w) String::fromStdWString(w)
+#endif // WS2S
+
+#ifndef S2WS
+#define S2WS(a) String(a).toStdWString()
+#endif
+
 
 /**
  * .1 Lua_sleep
@@ -797,7 +805,11 @@ static int LFPathFileExist(lua_State *l)
 	if (pInputStr)
 	{
 		bRet = IsFileExistA(pInputStr);
-		LOG_INFO("%s，返回%d", pInputStr, bRet);
+		if (bRet)
+		{
+			LOG_INFO("文件[%s]存在", pInputStr);
+		}
+//		LOG_INFO("%s，返回%d", pInputStr, bRet);
 //		bRet = PathFileExistsA(pInputStr);
 	}
 	lua_pushboolean(l,bRet);
@@ -941,10 +953,13 @@ int LFSendMessage(lua_State *l)
  * 执行子程序，如果指定了等待执行完毕，则可取得子进程的标准输出。
  * 返回值为子进程的退出码，如果未等待执行完毕就返回则返回255
  */
-INT ExecSubProcess(LPCWSTR szCmd, WORD ShowWnd, DWORD waitTime, OUT string& Result)
+BOOL ExecSubProcess(LPCWSTR szCmd, WORD ShowWnd, DWORD waitTime, OUT string& Result, OUT DWORD* pExitCode)
 {
 	if (!szCmd || !szCmd[0])
-		return -1;
+	{
+		LOG_ERROR("错误！进程的命令行不可以为空。");
+		return FALSE;
+	}
 	//子进程启动信息设置
 	WCHAR szTempPath[MAX_PATH] = { 0 };
 	GetTempPath(MAX_PATH, szTempPath);
@@ -970,23 +985,19 @@ INT ExecSubProcess(LPCWSTR szCmd, WORD ShowWnd, DWORD waitTime, OUT string& Resu
 	}
 	// 运行子进程并等待其结束
 	PROCESS_INFORMATION pi;
-	// 	MessageBox(NULL,FullCmdLine,NULL,MB_OK);
-	// 	return 0;
-	BOOL flag = CreateProcessW(NULL, (LPWSTR)szCmd, NULL, NULL, TRUE, NULL, NULL, NULL, &si, &pi);
-	if (!flag)
+	BOOL bRet = CreateProcessW(NULL, (LPWSTR)szCmd, NULL, NULL, TRUE, NULL, NULL, NULL, &si, &pi);
+	if (!bRet)
 	{
 		LOG_INFO("执行命令%s时发生了错误，错误ID为%d：", String::fromStdWString((LPCWSTR)szCmd).c_str(), GetLastError());
-		return GetLastError();
+		return FALSE;
 	}
-
-	DWORD dwExitCode = 255;
 
 	if (waitTime != 0)
 	{
 		DWORD dwWait = WaitForSingleObject(pi.hProcess, waitTime);
 		if (dwWait == WAIT_OBJECT_0)
 		{
-			GetExitCodeProcess(pi.hProcess, &dwExitCode);
+			GetExitCodeProcess(pi.hProcess, pExitCode);
 			if (hOutPutFile)
 			{
 				CloseHandle(hOutPutFile);
@@ -1000,7 +1011,7 @@ INT ExecSubProcess(LPCWSTR szCmd, WORD ShowWnd, DWORD waitTime, OUT string& Resu
 			{
 				Result = fr.read();
 			}
-			LOG_INFO("子进程[%s]退出返回[%d],标准输出：", String::fromStdWString(szCmd).c_str(), dwExitCode);
+			LOG_INFO("子进程[%s]退出码[%d],标准输出：", String::fromStdWString(szCmd).c_str(), *pExitCode);
 			LOG_INFO("%s", Result.c_str());
 		}
 		else if (dwWait == WAIT_TIMEOUT)
@@ -1010,7 +1021,12 @@ INT ExecSubProcess(LPCWSTR szCmd, WORD ShowWnd, DWORD waitTime, OUT string& Resu
 		else
 		{
 			LOG_ERROR("等待子进程[%s]时返回一个意料之外的值[%d]", String::fromStdWString(szCmd).c_str(), dwWait);
+			bRet = FALSE;
 		}
+	}
+	else
+	{
+		LOG_INFO("子进程[%s]创建成功", String::fromStdWString(szCmd).c_str());
 	}
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
@@ -1020,7 +1036,7 @@ INT ExecSubProcess(LPCWSTR szCmd, WORD ShowWnd, DWORD waitTime, OUT string& Resu
 		hOutPutFile = NULL;
 	}
 
-	return dwExitCode;
+	return bRet;
 }
 
 
@@ -1034,9 +1050,10 @@ int LFExec(lua_State *l)
 	WORD ShowWindow = LOWORD(lua_tointeger(l, 2));
 	std::wstring wstr = String(CommandLine).toStdWString();
 	string result;
-	INT iExitCode = ExecSubProcess(wstr.c_str(), ShowWindow, 0, result);
-	LOG_INFO("[%s],[%d]返回[%d]", CommandLine, ShowWindow, iExitCode);
-	lua_pushboolean(l, iExitCode);
+	DWORD dwExitCode = 255;
+	BOOL bRet = ExecSubProcess(wstr.c_str(), ShowWindow, 0, result, &dwExitCode);
+	LOG_INFO("执行子进程[%s],[%d]返回[%s]", CommandLine, ShowWindow, bRet?"TRUE":"FALSE");
+	lua_pushboolean(l, bRet);
 	return 1;
 }
 
@@ -1050,11 +1067,14 @@ int LFExecWait(lua_State *l)
 {
 	const char* CommandLine = lua_tostring(l,1);
 	WORD ShowWindow = LOWORD(lua_tointeger(l,2));
+	LOG_INFO("执行程序[%s]并等待它执行完毕", CommandLine);
 	std::wstring wstr = String(CommandLine).toStdWString();
 	string result;
-	INT iExitCode = ExecSubProcess(wstr.c_str(), ShowWindow, INFINITE, result);
-	LOG_INFO("[%s],[%d]返回[%d]", CommandLine, ShowWindow, iExitCode);
-	lua_pushboolean(l, iExitCode);
+	DWORD dwExitCode = 255;
+	BOOL bRet = ExecSubProcess(wstr.c_str(), ShowWindow, INFINITE, result, &dwExitCode);
+	LOG_INFO("创建子进程([%s],[%d])的返回值为[%s],退出码为%d", CommandLine, ShowWindow, bRet?"TRUE":"FALSE", dwExitCode);
+	lua_pushboolean(l, bRet);
+	lua_pushinteger(l, dwExitCode);
 	return 1;
 }
 
@@ -1064,9 +1084,10 @@ int LFExecGetStdout(lua_State *l)
 	WORD ShowWindow = LOWORD(lua_tointeger(l,2));
 	string result;
 	std::wstring wstr = String(CommandLine).toStdWString();
-	INT iExitCode = ExecSubProcess(wstr.c_str(), ShowWindow, INFINITE, result);
-	LOG_INFO("[%s],[%d]返回[%d]", CommandLine, ShowWindow, iExitCode);
-	lua_pushboolean(l, iExitCode);
+	DWORD dwExitCode = 255;
+	BOOL bRet = ExecSubProcess(wstr.c_str(), ShowWindow, INFINITE, result, &dwExitCode);
+	LOG_INFO("创建子进程([%s],[%d])的返回值为[%s],退出码为%d", CommandLine, ShowWindow, bRet ? "TRUE" : "FALSE", dwExitCode);
+	lua_pushboolean(l, bRet);
 	lua_pushstring(l, result.c_str());
 	return 2;
 }
@@ -1130,6 +1151,37 @@ int LFCreateFileShortcut(lua_State *l)
 	lua_pushboolean(l,bRet);
 	return 1;
 }
+
+
+
+int LFCreateShortCutEx(lua_State *l)
+{
+	const char* lpszLnkFileFullPath = lua_tostring(l, 1);
+	const char* lpszTargetExeFullPath = lua_tostring(l, 2);
+	const char* lpszParam = lua_tostring(l, 3);
+	const char* lpszIcon = lua_tostring(l, 4);
+	ptrdiff_t IconIndex = lua_tointeger(l, 5);
+	const char* lpszWorkDir = lua_tostring(l, 6);
+
+	if (lpszLnkFileFullPath == NULL || lpszLnkFileFullPath[0] == 0 || 
+		lpszTargetExeFullPath == NULL || lpszTargetExeFullPath[0] == 0)
+	{
+		lua_pushboolean(l, FALSE);
+		return 0;
+	}
+	
+	wstring wstrLnkFileFullPath = S2WS(lpszLnkFileFullPath);
+	wstring wstrTargetExeFullPath = S2WS(lpszTargetExeFullPath);
+	wstring wstrParam = lpszParam ? S2WS(lpszParam) : L"";
+	wstring wstrIcon = lpszIcon ? S2WS(lpszIcon) : L"";
+	wstring wstrWorkDir = lpszWorkDir ? S2WS(lpszWorkDir) : L"";
+
+	BOOL bRet = os::CreateFileShortcutEx(wstrLnkFileFullPath, wstrTargetExeFullPath, wstrParam, wstrIcon, IconIndex, wstrWorkDir);
+	LOG_INFO("创建快捷方式[%s]==>[%s - %s]", lpszTargetExeFullPath, lpszLnkFileFullPath, lpszParam ? lpszParam : "");
+	lua_pushboolean(l, bRet);
+	return 1;
+}
+
 
 int LFKillProcessByName(lua_State *l)
 {
@@ -1236,6 +1288,7 @@ static const struct luaL_Reg OsExtLib[] = {
 	{"ShellExecute",LFShellExecute},
 	{"ReplacePathMacro",LFReplacePathMacro},
 	{"CreateShortCut",LFCreateFileShortcut},
+	{"CreateShortCutEx", LFCreateShortCutEx},
 	{"DirRemoveBackSlash",LFDirRemoveBackSlash},
 	{"GetSpecialFolder",LFGetSpecialFolder },
 	{"ShellNotifyAssoChanged",LFShellNotifyAssoChanged},

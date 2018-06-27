@@ -12,6 +12,7 @@ extern "C"
 #include "LuaExt/RegIni.h"
 #include "LuaExt/OsCommon.h"
 #include "LuaExt/Firewall.h"
+#include "logger.h"
 #include "LibLuaExt.h"
 //#include "../LuaCJson/LuaCJson.h"
 
@@ -23,4 +24,5 @@ void LuaOpenExtendLib(PVOID pLuaState)
 	luaopen_OsCommon(LuaS);
 	luaopen_regini(LuaS);
 	luaopen_Firewall(LuaS);
+	luaopen_Log(LuaS);
 }

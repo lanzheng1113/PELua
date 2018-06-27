@@ -540,47 +540,6 @@ BOOL os::FilePath::DeepCopyFile( const TS_String& strSrc, const TS_String& strDs
 	return bRet;
 }
 
-//BOOL os::FilePath::OpenSaveFile(HINSTANCE hInst, HWND hWnd, LPTSTR pTitle, LPTSTR pFilter, LPTSTR pFileName, LPTSTR lpstrDefExt, DWORD dFlags,DWORD * pdwDefIndex, LPCTSTR lpszInitDir)
-//{
-//	OPENFILENAME SaveFileName;
-//	TCHAR        szFile[MAX_PATH]={};
-//	
-//	
-//	assert( pTitle && pFileName );
-//	
-//	_sntprintf_s(szFile,MAX_PATH,_T("%s"),pFileName);
-//	szFile[MAX_PATH -1] = _T('\0');
-//	
-//	SaveFileName.lStructSize       = sizeof(SaveFileName);
-//	SaveFileName.hwndOwner         = hWnd;
-//	SaveFileName.hInstance         = hInst;
-//	SaveFileName.lpstrFilter       = pFilter;
-//	SaveFileName.lpstrCustomFilter = (LPTSTR) NULL;
-//	SaveFileName.nMaxCustFilter    = 0L;
-//	SaveFileName.nFilterIndex      = pdwDefIndex?*pdwDefIndex:1L;
-//	SaveFileName.lpstrFile         = szFile;
-//	SaveFileName.nMaxFile          = sizeof(szFile);
-//	SaveFileName.lpstrFileTitle    = NULL;
-//	SaveFileName.nMaxFileTitle     = 0;
-//	SaveFileName.lpstrInitialDir   = lpszInitDir;
-//	SaveFileName.lpstrTitle        = pTitle;
-//	SaveFileName.nFileOffset       = 0;
-//	SaveFileName.nFileExtension    = 0;
-//	SaveFileName.lpstrDefExt = lpstrDefExt;
-//	SaveFileName.lCustData         = 0;
-//    SaveFileName.lpfnHook          = os::FilePath::MyOFNHookProc; 
-//	SaveFileName.Flags = dFlags;
-//	
-//	if (GetSaveFileName(&SaveFileName))
-//	{
-//		_tcsncpy_s(pFileName, MAX_PATH, SaveFileName.lpstrFile, _TRUNCATE);
-//		if( pdwDefIndex )
-//			*pdwDefIndex = SaveFileName.nFilterIndex;
-//		return TRUE;
-//	}
-//	return FALSE;
-//}
-
 void os::Process::StartApp( LPCTSTR szAppCaption, LPCTSTR szParam/*=NULL*/, bool bIsFullPath /*= false */ )
 {
 	TS_String strAppPath(szAppCaption);
@@ -593,32 +552,6 @@ void os::Process::StartApp( LPCTSTR szAppCaption, LPCTSTR szParam/*=NULL*/, bool
 	ShellExecute( NULL, NULL, strAppPath.c_str(), szParam, NULL, SW_SHOWNORMAL );//异步
 }
 
-// void os::FilePath::ReleaseTrace( const TCHAR* pszInfo, ... )
-// {
-// 	if( !pszInfo || !pszInfo[0])
-// 	{
-// 		return;
-// 	}
-// 	TCHAR szBuf[MAX_PATH]={};
-// 	
-// 	try
-// 	{
-// 		va_list arglist;
-// 		va_start(arglist, pszInfo);
-// #if _MSC_VER < 1500		
-// 		_vstprintf( szBuf, pszInfo, arglist );
-// #else
-// 		_vstprintf_s( szBuf, pszInfo, arglist );
-// #endif
-// 		va_end(arglist);
-// 	}
-// 	catch (...)
-// 	{
-// 		_tcsncpy_s(szBuf, pszInfo, _TRUNCATE);
-// 	}
-// //	TS_String tMsg = StringHelper::Format(_T("~~~%s"), szBuf);
-// 	//OutputDebugString( tMsg.c_str() );
-// }
 
 int os::FilePath::SetClipboardText( LPCTSTR lpszBuffer, HWND hWnd )
 {
@@ -1796,55 +1729,113 @@ namespace os
 		}
 	}//namespace DebugHelper    
 
-
-BOOL CreateFileShortcut(LPCTSTR lpszLnkFileFullPath,LPCTSTR lpszTargetExeFullPath)
-{
-	if (lpszLnkFileFullPath == NULL ||
-		0 == _tcscmp(lpszLnkFileFullPath,_T("")))
+	BOOL CreateFileShortcut(LPCTSTR lpszLnkFileFullPath,LPCTSTR lpszTargetExeFullPath)
 	{
-		return FALSE;
-	}
+		if (lpszLnkFileFullPath == NULL ||
+			0 == _tcscmp(lpszLnkFileFullPath,_T("")))
+		{
+			return FALSE;
+		}
 
-	if (lpszTargetExeFullPath == NULL ||
-		0 == _tcscmp(lpszLnkFileFullPath,_T("")))
-	{
-		return FALSE;
-	}
+		if (lpszTargetExeFullPath == NULL ||
+			0 == _tcscmp(lpszLnkFileFullPath,_T("")))
+		{
+			return FALSE;
+		}
 
-	HRESULT hr;
-	IShellLink     *pLink;  //IShellLink对象指针
-	IPersistFile   *ppf; //IPersisFil对象指针
+		HRESULT hr;
+		IShellLink     *pLink;  //IShellLink对象指针
+		IPersistFile   *ppf; //IPersisFil对象指针
 
-	//创建IShellLink对象
-	hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pLink);
-	if (FAILED(hr))
-		return FALSE;
+		//创建IShellLink对象
+		hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pLink);
+		if (FAILED(hr))
+			return FALSE;
 
-	//从IShellLink对象中获取IPersistFile接口
-	hr = pLink->QueryInterface(IID_IPersistFile, (void**)&ppf);
-	if (FAILED(hr))
-	{
+		//从IShellLink对象中获取IPersistFile接口
+		hr = pLink->QueryInterface(IID_IPersistFile, (void**)&ppf);
+		if (FAILED(hr))
+		{
+			pLink->Release();
+			return FALSE;
+		}
+
+		//目标
+		pLink->SetPath(lpszTargetExeFullPath);
+		//快捷键
+		//pLink->SetHotkey(wHotkey);
+		//备注
+		//pLink->SetDescription(lpszDescription);
+		//显示方式
+		pLink->SetShowCmd(SW_SHOWNORMAL);
+		pLink->SetWorkingDirectory(os::FilePath::GetPath(lpszTargetExeFullPath).c_str());
+
+		//保存快捷方式到指定目录下
+		hr = ppf->Save(lpszLnkFileFullPath, TRUE);
+
+		ppf->Release();
 		pLink->Release();
-		return FALSE;
+		return SUCCEEDED(hr);
 	}
 
-	//目标
-	pLink->SetPath(lpszTargetExeFullPath);
-	//快捷键
-	//pLink->SetHotkey(wHotkey);
-	//备注
-	//pLink->SetDescription(lpszDescription);
-	//显示方式
-	pLink->SetShowCmd(SW_SHOWNORMAL);
-	pLink->SetWorkingDirectory(os::FilePath::GetPath(lpszTargetExeFullPath).c_str());
+	BOOL CreateFileShortcutEx(
+		const std::wstring& wstrLnkFileFullPath, 
+		const std::wstring& wstrTargetExeFullPath,
+		const std::wstring& wstrParam,
+		const std::wstring& wstrIcon,
+		ptrdiff_t IconIndex, 
+		const std::wstring& wstrWorkDir)
+	{
+		HRESULT hr;
+		IShellLink     *pLink;  //IShellLink对象指针
+		IPersistFile   *ppf; //IPersisFil对象指针
 
-	//保存快捷方式到指定目录下
-	hr = ppf->Save(lpszLnkFileFullPath, TRUE);
+							 //创建IShellLink对象
+		hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pLink);
+		if (FAILED(hr))
+			return FALSE;
 
-	ppf->Release();
-	pLink->Release();
-	return SUCCEEDED(hr);
-}
+		//从IShellLink对象中获取IPersistFile接口
+		hr = pLink->QueryInterface(IID_IPersistFile, (void**)&ppf);
+		if (FAILED(hr))
+		{
+			pLink->Release();
+			return FALSE;
+		}
+
+		//目标
+		pLink->SetPath(wstrTargetExeFullPath.c_str());
+		//快捷键
+		//pLink->SetHotkey(wHotkey);
+		//备注
+		//pLink->SetDescription(lpszDescription);
+		//显示方式
+		pLink->SetShowCmd(SW_SHOWNORMAL);
+
+		if (!wstrParam.empty())
+		{
+			pLink->SetArguments(wstrParam.c_str());
+		}
+		if (!wstrIcon.empty())
+		{
+			pLink->SetIconLocation(wstrIcon.c_str(), IconIndex);
+		}
+		if (!wstrWorkDir.empty())
+		{
+			pLink->SetWorkingDirectory(os::FilePath::GetPath(wstrWorkDir).c_str());
+		}
+		else
+		{
+			pLink->SetWorkingDirectory(os::FilePath::GetPath(wstrTargetExeFullPath).c_str());
+		}
+		//保存快捷方式到指定目录下
+		hr = ppf->Save(wstrLnkFileFullPath.c_str(), TRUE);
+
+		ppf->Release();
+		pLink->Release();
+		return SUCCEEDED(hr);
+	}
+
 
 
 
