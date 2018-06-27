@@ -74,15 +74,15 @@ int LFSetEnvironment(lua_State* l)
 int LFSetDesktopText(lua_State* l)
 {
 	const char* pText = lua_tostring(l, 1);
-	DWORD rgbColor = lua_tointeger(l, 2);
+	lua_Integer rgbColor = lua_tointeger(l, 2);
 	const char* pFontName = lua_tostring(l, 3);
-	DWORD FontSize = lua_tointeger(l, 4);
+	lua_Integer FontSize = lua_tointeger(l, 4);
 	// 如果left,top == -1,-1
 	// 那么居中显示
-	int xleft = lua_tointeger(l, 5);
-	int ytop = lua_tointeger(l, 6);
-	int xright = lua_tointeger(l, 7);
-	int ybotton = lua_tointeger(l, 8);
+	lua_Integer xleft = lua_tointeger(l, 5);
+	lua_Integer ytop = lua_tointeger(l, 6);
+	lua_Integer xright = lua_tointeger(l, 7);
+	lua_Integer ybotton = lua_tointeger(l, 8);
 	PE_Text(pText ? String(pText).toStdWString().c_str() : NULL,
 			rgbColor, 
 			pFontName ? String(pFontName).toStdWString().c_str() : NULL, 

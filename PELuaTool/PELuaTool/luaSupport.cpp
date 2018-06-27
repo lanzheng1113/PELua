@@ -10,11 +10,21 @@ extern "C"
 #include "util/Logger.h"
 #include "../LibLuaBase/LibLuaExt.h"
 
+#ifdef _WIN64
+#ifdef _DEBUG
+#pragma comment(lib,"../x64/Debug/LibLuaBase.lib")
+#else
+#pragma comment(lib,"../x64/Release/LibLuaBase.lib")
+#endif // DEBUG
+
+#else
 #ifdef _DEBUG
 #pragma comment(lib,"../Debug/LibLuaBase.lib")
 #else
 #pragma comment(lib,"../Release/LibLuaBase.lib")
 #endif // DEBUG
+
+#endif
 
 
 int luaopen_PE(lua_State* l);
@@ -59,8 +69,8 @@ bool RunLuaScript(const std::string& strScript)
 	{
 		int t = lua_type(LuaS, -1);
 		const char* err = lua_tostring(LuaS, -1);
-		LOG_ERROR("LUA", "Error: %s\n", err);
-		MessageBoxA(NULL, err, NULL, MB_OK);
+		LOG_ERROR("LUA Error: %s\n", err);
+		MessageBoxA(NULL, err, err, MB_OK);
 		lua_pop(LuaS, 1);
 		//pvs Delete
 		//bRet = false;

@@ -12,6 +12,14 @@ using std::wstring;
 using std::string;
 #include "pe.h"
 
+#ifndef WS2S
+#define WS2S(w) String::fromStdWString(w)
+#endif // WS2S
+
+#ifndef S2WS
+#define S2WS(a) String(a).toStdWString()
+#endif
+
 // 定义
 #define MAX_NAME		80
 #define PESHELL			TEXT("Shell")
@@ -544,7 +552,7 @@ PTSTR UStrRightTrim(PTSTR ptstr)
 	PTSTR tmp = ptstr;
 	if (ptstr)
 	{
-		DWORD i = wcslen(ptstr) - 1;
+		size_t i = wcslen(ptstr) - 1;
 		ptstr = ptstr + i;
 		while ((*ptstr == ' ') || (*ptstr == '\t'))
 		{
@@ -709,10 +717,38 @@ int PEMain(const wstring& szLuaFile)
 	return (HRESULT)msg.wParam;
 }
 
+
+static std::wstring FormatErrorCode(DWORD errCode)
+{
+	wstring strRet;
+	LPVOID lpMsgBuf = NULL;
+	DWORD dw = errCode;
+	FormatMessageW(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		dw,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPWSTR)&lpMsgBuf,
+		0, NULL);
+	if (lpMsgBuf)
+	{
+		strRet = (LPWSTR)lpMsgBuf;
+	}
+	LocalFree(lpMsgBuf);
+	return strRet;
+}
+
+
 void PE_INIT()
 {
 	BOOL Icon = TRUE;
-	SHSetValue(HKEY_LOCAL_MACHINE, PELOGON, TEXT("TrayIcon"), REG_DWORD, &Icon, sizeof(Icon));
+	LSTATUS ErrorCode = SHSetValue(HKEY_LOCAL_MACHINE, PELOGON, TEXT("TrayIcon"), REG_DWORD, &Icon, sizeof(Icon));
+	if (ERROR_SUCCESS == ErrorCode)
+		LOG_INFO("PE INIT 成功");
+	else
+	{
+		LOG_INFO("PE INIT 失败[%s]", WS2S(FormatErrorCode(ErrorCode)).c_str());
+	}
 }
 
 void PE_SHELL(LPCTSTR lpShell)
@@ -726,7 +762,7 @@ BOOL PE_SetEnvironment(wstring ptzEnvName, wstring ptzEnvValue, BOOL bSystem)
 {
 	if (ptzEnvName.empty() || ptzEnvValue.empty())
 	{
-		DWORD dwResult = 0;
+		DWORD_PTR dwResult = 0;
 		SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)Text_Environment, SMTO_ABORTIFHUNG, 5000, &dwResult);
 		return TRUE;
 	}
@@ -738,14 +774,14 @@ BOOL PE_SetEnvironment(wstring ptzEnvName, wstring ptzEnvValue, BOOL bSystem)
 		wstring strRegPath(Session_Manager);
 		strRegPath += TEXT("\\");
 		strRegPath += Text_Environment;
-		BOOL isContentMacro = ptzEnvValue.find(L'%');
+		BOOL isContentMacro = (ptzEnvValue.find(L'%') != wstring::npos);
 		SHSetValue(HKEY_LOCAL_MACHINE, strRegPath.c_str(), ptzEnvName.c_str(), isContentMacro ? REG_EXPAND_SZ : REG_SZ, ptzEnvValue.c_str(), ptzEnvValue.length()*sizeof(TCHAR));
 		SHSetValue(HKEY_CURRENT_USER, Text_Environment, ptzEnvName.c_str(), isContentMacro ? REG_EXPAND_SZ : REG_SZ, ptzEnvValue.c_str(), ptzEnvValue.length()*sizeof(TCHAR));
 	}
 
 	if (bSystem)
 	{
-		DWORD dwResult = 0;
+		DWORD_PTR dwResult = 0;
 		SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)Text_Environment, SMTO_ABORTIFHUNG, 5000, &dwResult);
 	}
 	return bResult;
@@ -780,7 +816,7 @@ HRESULT AdjustPrivilege(PCTSTR ptzName)
  */
 HRESULT Boot(BOOL bReboot)
 {
-	DWORD dwResult;
+	DWORD_PTR dwResult;
 	SendMessageTimeout(HWND_BROADCAST, WM_QUERYENDSESSION, 0, 0, 0, 2000, &dwResult);
 	SendMessageTimeout(HWND_BROADCAST, WM_ENDSESSION, 0, 0, 0, 2000, &dwResult);
 
