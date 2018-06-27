@@ -424,9 +424,10 @@ function 安装和启动无线网卡驱动()
 		无线驱动包路径1 = "X:\\WifiDriver\\DRIVERS_NET_WIRELESS_64.7z"
 		无线驱动包路径2 = "X:\\WifiDriver\\DRIVERS_NET_WIRELESS_64_2.7z"
 	end
-	
+	local 桌面目录 = 获取桌面目录()
 	if 存在路径(无线驱动包路径1) then
 		-- 创建快捷方式 LINK %desktop%\搜索安装无线驱动,%&myname%,wifi.wcs,netshell.dll,157,,%programfiles%
+		OsExt.CreateShortCutEx(桌面目录 .. "\\搜索安装无线驱动.lnk", "X:\\Windows\\System32\\pecmd.exe", "wifi.wcs", "netshell.dll", 157, ProgramFiles目录)
 		写桌面文本("加载无线网卡驱动.....", RGB红色, 字体, 字体大小, -1, -1, -1, -1)
 		安装驱动(无线驱动包路径1)
 		return
@@ -527,11 +528,16 @@ end
 
 
 function setup()
+
+	--
+    -- 仅用于32位的程序
 	-- 如果是64位系统则禁用WOW64文件重定向和禁用注册表重定向 --
-	if OsExt.IsWow64() then
-		OsExt.DisableWow64FsRedir()
-		RegIni.SetRegView(64)
-	end
+	--if OsExt.IsWow64() then
+	--	OsExt.DisableWow64FsRedir()
+	--	RegIni.SetRegView(64)
+	--end
+	--
+	
 	-- 设置日志路径 --
 	Log.SetLogFile("X:\\Windows\\PESetup.log")
 	Log.info("开始执行setup脚本")
@@ -679,7 +685,6 @@ function setup()
 		加载有线网卡驱动()
 	end
 	
-	
 	Log.info("=====================================================")
 	Log.info("         处理无线网卡")
 	Log.info("=====================================================")
@@ -753,7 +758,7 @@ function setup()
 	--
 	-- 创建快捷方式
 	--
-	桌面目录 = 获取桌面目录()
+	local 桌面目录 = 获取桌面目录()
 	if 存在路径("X:\\Program Files\\Network\\[Network]WanDrv6.exe") then
 		创建快捷方式(桌面目录 .. "\\网卡万能驱动.lnk","X:\\Program Files\\Network\\[Network]WanDrv6.exe")
 	end
@@ -762,6 +767,8 @@ function setup()
 	end
 	-- TODO：创建以下两个快捷方式
 	-- LINK %desktop%\加载无线网卡,%windir%\system32\pecmd.exe,"%ProgramFiles%\wifi.wcs",%windir%\system32\netshell.dll#157
+	OsExt.CreateShortCutEx(桌面目录 .. "\\加载无线网卡.lnk", ProgramFiles目录 .. "\\wifi.wcs", "%windir%\system32\netshell.dll#157")
+	OsExt.CreateShortCut( 桌面目录 .. "\\宽带连接.lnk", "RASPHONE.PBK")
 	-- LINK %Desktop%\宽带连接,RASPHONE.PBK
 	创建快捷方式(桌面目录 .. "\\浏览器.lnk","X:\\Program Files (x86)\\TheWorld\\Application\\theworld.exe")
 	local 开始菜单程序目录 = 获取开始菜单程序目录()
@@ -779,11 +786,17 @@ function setup()
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\记事本.lnk","X:\\Windows\\notepad.exe")
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\屏幕键盘.lnk","X:\\Windows\\FreeVK.exe")
 	--LINK %programs%\实用工具\截图工具,%&myname%,%windir%\wall.ini sn,shell32.dll,141
+	OsExt.CreateShortCutEx(开始菜单程序目录 .. "\\实用工具\\截图工具.lnk", "X:\\Windows\\System32\\pecmd.exe", "X:\\Windows\\wall.ini sn", "netshell.dll", 141)
 	--HOTK Win + x,LOAD %windir%\wall.ini sn
 	创建快捷方式(开始菜单程序目录 .. "\\系统维护\\注册表编辑工具.lnk","X:\\Windows\\regedit.exe")
+	local appdata_dir = "X:\\Users\\Default\\AppData\\Roaming"
+	local sendto_dir = appdata_dir .. "\\Microsoft\\Windows\\SendTo"
+	OsExt.CreateShortCutEx(sendto_dir .. "\\发送到桌面快捷方式.lnk", "X:\\Windows\\System32\\pecmd.exe", "X:\\Windows\\wall.ini sd")
 	--LINK %sendto%\发送到桌面快捷方式,%&myname%,%windir%\wall.ini sd
 	sd = 注册表读文本("HKLM","SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e96b-e325-11ce-bfc1-08002be10318}\\0000","DriverDate")
 	if sd == "" then
+		local QuickLaunchDir = appdata_dir .. "\\Microsoft\\Internet Explorer\\Quick Launch"
+		OsExt.CreateShortCutEx(QuickLaunchDir .. "\\虚拟键盘.lnk", "X:\\Windows\\System32\\pecmd.exe", "X:\\Windows\\wall.ini vk", "freevk.exe#0")
 		--ifex $%&sd%=,LINK %QuickLaunch%\虚拟键盘, %&myname%,%windir%\wall.ini vk,freevk.exe#0
 	end
 	
@@ -817,6 +830,13 @@ function setup()
 	写桌面文本("初始化完成",RGB红色,字体,字体大小,-1,-1, -1, -1)
 	等待(500)
 	
+	if "X:\\Users\\Default\\AppData\\Roaming" ~= os.getenv("APPDATA") then
+		if os.getenv("APPDATA") == nil then
+			Log.error("设置APPDATA环境变量失败，当前值为nil")
+		else
+			Log.error("设置APPDATA环境变量失败，当前值为：" .. os.getenv("APPDATA"))
+		end
+	end
 	--
 	-- 支持USB无线网卡/连接手机上网
 	-- netrndis.inf
