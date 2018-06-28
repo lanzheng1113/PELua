@@ -1,7 +1,7 @@
 #pragma once
 
 PTSTR UStrTrim(PTSTR ptstr);
-HRESULT FindProc(PCTSTR ptzCmd);
+DWORD FindProcess(PCTSTR ptzCmd);
 HRESULT Exec(wstring ptzCmd);
 void GetShell(bool DeleteSettingKey);
 VOID InstallHookKeyBoard(BOOL Install);
@@ -14,3 +14,4 @@ void PE_SHELL(LPCTSTR lpShell);
 BOOL PE_SetEnvironment(wstring ptzEnvName, wstring ptzEnvValue, BOOL bSystem);
 BOOL PE_SetLogo(LPCTSTR lpImgPath, COLORREF bgColor);
 BOOL PE_Wall(LPCTSTR ptzCmd);
+VOID InitEnvironmentVariable();
