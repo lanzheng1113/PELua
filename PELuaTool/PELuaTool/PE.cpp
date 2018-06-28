@@ -34,7 +34,8 @@ using std::string;
 HINSTANCE		g_hInst = NULL;
 HWND			MainWindowHwnd = NULL;
 TCHAR			MyShell[MAX_PATH];
-BOOL			TrayIcon = FALSE;
+// 是否需要创建右下角的托盘
+BOOL			TrayIcon = FALSE;						
 HHOOK			g_hHook = NULL;
 HANDLE			CurrentProcess = NULL;
 TCHAR			MenuTipText[MAX_NAME];
@@ -223,12 +224,17 @@ VOID InsTrayIcon(BOOL Install)
 							FpNotify.hWnd = MainWindowHwnd;
 							FpNotify.uID = 0;
 							FpNotify.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-							//HICON hIcon = LoadIcon(g_hInst,(PTSTR)IDI_ICON1);
-							HICON hIcon = LoadIcon(g_hInst, (LPCWSTR)IDI_ICON1);
+							//HICON hIcon = LoadIcon(g_hInst,MAKEINTRESOURCE(IDI_ICON2));
+							HICON hIcon = LoadIcon(g_hInst, MAKEINTRESOURCE(IDI_ICON_TRAY));
 							if (!hIcon)
 							{
+								LOG_ERROR("加载IDI_ICON_TRAY图标失败，错误%d", GetLastError());
 								//hIcon = LoadIcon(g_hInst,(PTSTR)IDI_Main);
-								hIcon = LoadIcon(g_hInst, (LPCWSTR)IDI_Main);
+								hIcon = LoadIcon(g_hInst, MAKEINTRESOURCE(IDI_PELUATOOL));
+								if (!hIcon)
+								{
+									LOG_ERROR("加载IDI_PELUATOOL图标失败，错误%d", GetLastError());
+								}
 							}
 							FpNotify.hIcon = hIcon;
 							FpNotify.uCallbackMessage = CM_nTaskIcoMsg;
@@ -475,7 +481,7 @@ void GetShell(bool DeleteSettingKey)
 		SHGetValue(HKEY_LOCAL_MACHINE, PELOGON, TEXT("InitProc"), &dwType, &InitProc, &dwSize);
 		if ((!g_hHook) && (InitProc) && (MainWindowHwnd))
 		{
-			LOG_INFO("已获取Shell:[%s]", String::fromStdWString(MyShell).c_str());
+			LOG_INFO("设置窗口回调:[%s]", String::fromStdWString(MyShell).c_str());
 			SendMessage(MainWindowHwnd, FindShellMsg, 1, 0);
 		}
 	}
@@ -655,6 +661,7 @@ VOID InstallHookKeyBoard(BOOL Install)
 	{
 		if (!g_hHook)
 		{
+			LOG_INFO("安装处理Ctrl+Alt+Del的键盘钩子");
 			g_hHook = SetWindowsHookEx(WH_KEYBOARD_LL, InitProc, g_hInst, 0);
 		}
 	}
@@ -662,6 +669,7 @@ VOID InstallHookKeyBoard(BOOL Install)
 	{
 		if (g_hHook)
 		{
+			LOG_INFO("卸载处理Ctrl+Alt+Del的键盘钩子");
 			UnhookWindowsHookEx(g_hHook);
 			g_hHook = NULL;
 		}
@@ -741,10 +749,13 @@ static std::wstring FormatErrorCode(DWORD errCode)
 }
 
 
-void PE_INIT()
+void PE_INIT(BOOL noTray, BOOL noKeyboardHook)
 {
-	BOOL Icon = TRUE;
+	BOOL Icon = !noTray;
 	LSTATUS ErrorCode = SHSetValue(HKEY_LOCAL_MACHINE, PELOGON, TEXT("TrayIcon"), REG_DWORD, &Icon, sizeof(Icon));
+
+	BOOL kbdHook = !noKeyboardHook;
+	ErrorCode = SHSetValue(HKEY_LOCAL_MACHINE, PELOGON, TEXT("InitProc"), REG_DWORD, &kbdHook, sizeof(kbdHook));
 	if (ERROR_SUCCESS == ErrorCode)
 		LOG_INFO("PE INIT 成功");
 	else
