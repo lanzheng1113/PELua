@@ -23,6 +23,9 @@ using namespace std;
 
 bool RunLuaScript(const std::string& strScript);
 
+extern HINSTANCE		g_hInst;
+extern HANDLE			CurrentProcess;
+
 //
 // 进程退出值：
 // - 0 成功
@@ -38,6 +41,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+
+	g_hInst = hInstance;
+	CurrentProcess = GetCurrentProcess();
 
 	if (lpCmdLine)
 	{
