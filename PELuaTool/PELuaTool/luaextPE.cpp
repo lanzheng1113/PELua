@@ -29,7 +29,9 @@ using std::wstring;
 
 int LFINIT(lua_State *l)
 {
-	PE_INIT();
+	BOOL noTray = lua_toboolean(l, 1);
+	BOOL noKbdHook = lua_toboolean(l, 2);
+	PE_INIT(noTray, noKbdHook);
 	return 0;
 }
 
