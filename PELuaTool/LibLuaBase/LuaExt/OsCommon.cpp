@@ -1228,6 +1228,50 @@ int LFSetFileAttributes(lua_State* l)
 	return 1;
 }
 
+int LFApplyEnvironmentVarsChange(lua_State* l)
+{
+	DWORD_PTR dwResult = 0;
+	//::SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)Text_Environment);
+	BOOL bRet = FALSE;
+	if (0 == SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)TEXT("Environment"), SMTO_ABORTIFHUNG, 5000, &dwResult))
+	{
+		DWORD lastErr = GetLastError();
+		if (lastErr == ERROR_TIMEOUT)
+		{
+			LOG_INFO("广播环境变量变化时发生了超时错误");
+		}
+		else
+		{
+			LOG_INFO("广播环境变量变化时发生了错误%d", lastErr);
+		}
+	}
+	else
+	{
+		LOG_INFO("成功广播环境变量发生变化的消息。");
+		bRet = TRUE;
+	}
+	lua_pushboolean(l,bRet);
+	return 1;
+}
+
+int LFGetProcessID(lua_State* l)
+{
+	DWORD dwRet = 0;
+	const char* pProcessName = lua_tostring(l, 1);
+	if (pProcessName == NULL)
+	{
+		dwRet = GetCurrentProcessId();
+		LOG_INFO("当前进程ID = %d", dwRet);
+	}
+	else
+	{
+		dwRet = FindProc(S2WS(pProcessName).c_str());
+		LOG_INFO("找到了进程%s，id = %d", pProcessName, dwRet);
+	}
+	lua_pushinteger(l, dwRet);
+	return 1;
+}
+
 #define OSEXT_VERSION "1.0.0.1"
 #define OSEXT_LIBNAME "OsExt"
 /*
@@ -1296,8 +1340,12 @@ static const struct luaL_Reg OsExtLib[] = {
 	{"StopService", LFStopService },
 	{"StartService", LFStartService},
 	{"SetFileAttributes", LFSetFileAttributes },
+	{"ApplyEnvironmentVarsChange", LFApplyEnvironmentVarsChange},
+	{"GetProcessId",LFGetProcessID},
 	{NULL, NULL},
 };
+
+
 
 /**
  * \} 
