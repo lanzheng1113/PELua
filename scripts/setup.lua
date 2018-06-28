@@ -58,13 +58,16 @@ RGB红色 = 0xFF0000
 -- PEExt.SetEnvironment 设置环境变量
 -- 参数1 环境变量名
 -- 参数2 环境变量对应的值
+-- 参数3 是否为PE系统全局环境变量，如果为TRUE则整个系统生效(ENVI $XXX=OOO),为FALSE则只对当前程序生效(ENVI #xxx=ooo)。
 --
 设置环境变量 = PEExt.SetEnvironment
 
 --
--- 取环境变量 如os.getenv("windir") 等于 %windir%
+-- PEExt.InitEnvironmentVariable
+-- 设置以下环境变量：Favorites,Desktop,StartMenu,Startup,Programs,SendTo,Personal,QuickLaunch
+-- 无参数，返回boolean类型
 --
-获取环境变量 = os.getenv
+初始化系统环境变量 = PEExt.InitEnvironmentVariable
 
 --
 -- 杀死参数所指定的所有进程
@@ -133,6 +136,18 @@ RGB红色 = 0xFF0000
 
 ProgramFiles目录 = "X:\\Program Files"
 
+--
+-- 取环境变量 如os.getenv("windir") 等于 %windir%
+-- 当为空时返回空字符串，不返回nil以防止连接字符串时发生错误
+--
+function 获取环境变量(pstrEnv)
+	local value = os.getenv(pstrEnv)
+	if nil == value then
+		return ""
+	else
+		return value
+	end
+end
 
 function 获取桌面目录()
 	return OsExt.GetSpecialFolder(CSIDL_COMMON_DESKTOPDIRECTORY)
@@ -162,6 +177,7 @@ function reverse_find(str, token)
 	m = string.len(rs) - pEnd + 1
 	return string.sub(str,1,m) 
 end
+
 
 function 获取文件名(文件全路径, 是否保留扩展名)
 	-- 取得扩展名的文件名，如x:\\abc.7z ==> abc.7z
@@ -232,7 +248,7 @@ function 安装驱动(驱动包路径, 安装位置)
 	-- 如果没有指定要将驱动安装到哪里，那么将驱动安装到临时目录
 	local inst_to_path = nil
 	if nil == 安装位置 or "" == 安装位置 then
-		inst_to_path = os.getenv("temp") .. "\\pe-driver\\" .. fname
+		inst_to_path = 获取环境变量("temp") .. "\\pe-driver\\" .. fname
 	else
 		inst_to_path = 安装位置
 	end
@@ -249,18 +265,18 @@ function 安装驱动(驱动包路径, 安装位置)
 	if nil ~= string.find(fname,"custom") or nil ~= string.find(fname,"custom_64") then
 		ID2 = hwids()
 		if ID1 ~= nil and ID2 ~=nil and ID1 < ID2 then
-			执行子进程并等待它完成("cmd.exe /c dpinst.exe /S /Path " .. os.getenv("temp") .. "\\pe-driver\\" .. fname)
+			执行子进程并等待它完成("cmd.exe /c dpinst.exe /S /Path " .. 获取环境变量("temp") .. "\\pe-driver\\" .. fname)
 		end
 	end
 	
 	-- 如果是DRIVERS_USB*.7z，安装驱动后在临时目录尝试重新安装一次。
 	if nil ~= string.find(fname,"DRIVERS_USB") then
-		执行子进程并等待它完成("cmd.exe /c dpinst.exe /S /Path " .. os.getenv("temp") .. "\\pe-driver\\" .. fname)
+		执行子进程并等待它完成("cmd.exe /c dpinst.exe /S /Path " .. 获取环境变量("temp") .. "\\pe-driver\\" .. fname)
 	end
 	
 	-- 如果是在临时目录中安装则在安装后删除%temp%\\pe-driver
 	if nil == 安装位置 or "" == 安装位置 then
-		删除目录(os.getenv("temp") .. "\\pe-driver")
+		删除目录(获取环境变量("temp") .. "\\pe-driver")
 	end
 	return true
 end
@@ -282,7 +298,7 @@ end
 
 function 安装SATA驱动()
 	local the_7z = ProgramFiles目录 .. "\\DRIVERS_RAID.7z"
-	local target = os.getenv("SystemDrive") .. "\\raid"
+	local target = 获取环境变量("SystemDrive") .. "\\raid"
 	if not 安装驱动(the_7z, target) then
 		return false
 	end
@@ -313,7 +329,7 @@ function 安装SATA驱动_VEN_8086()
 		return
 	end
 	local the_7z = ProgramFiles目录 .. "\\DRIVERS_RAID.7z"
-	local target = os.getenv("SystemDrive") .. "\\raid"
+	local target = 获取环境变量("SystemDrive") .. "\\raid"
 	安装驱动(the_7z, target)
 	修改WinNTSetup文件("iaStorAC")
 end
@@ -321,7 +337,7 @@ end
 
 function sapple()
 	local the_7z = ProgramFiles目录 .. "\\DRIVERS_RAID.7z"
-	local target = os.getenv("SystemDrive") .. "\\raid"
+	local target = 获取环境变量("SystemDrive") .. "\\raid"
 	if not 安装驱动(the_7z,target) then
 		return false
 	end
@@ -568,9 +584,14 @@ function setup()
 	初始化PE()
 	-- 调用命令执行其他初始化
 	执行子进程并等待它完成("cmd.exe /c X:\\Windows\\system32\\startnet.cmd", SW_HIDE)
-	设置环境变量("APPDATA","X:\\Users\\Default\\AppData\\Roaming")
+	设置环境变量("APPDATA","X:\\Users\\Default\\AppData\\Roaming",true)
+	初始化系统环境变量()
 	-- 启动系统外壳(类似Explorer.exe)
 	PEExt.SHELL("X:\\Windows\\WinXShell.exe")
+	OsExt.Sleep(1000)
+	while not OsExt.GetProcessId("WinXShell.exe") do
+		OsExt.Sleep(500)
+	end
 	--执行子进程("WinXShell.exe",SW_SHOW)
 	-- 设置SHELL风格
 	执行子进程并等待它完成("cmd.exe /c regedit /s \"" .. ProgramFiles目录 .. "\\Classic Shell\\cs.reg\"", SW_HIDE)
@@ -588,6 +609,7 @@ function setup()
 		Log.error("         执行winpeshl.exe失败,错误id=" .. tostring(iRet))
 		Log.error("=====================================================")
 	end
+	OsExt.ApplyEnvironmentVarsChange()
 	Public目录 = 获取环境变量("PUBLIC")
 	if Public目录 ~= "" then
 		删除文件(Public目录 .. "\\desktop\\desktop.ini")
@@ -696,7 +718,7 @@ function setup()
 	
 	-- 处理无线网卡
 	-- 1,在setupapi.dev.log中查找，调用devcon删除msdri.inf
-	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c find \"msdri.inf\'\" " .. os.getenv("windir") .. "\\inf\\setupapi.dev.log", SW_HIDE)
+	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c find \"msdri.inf\'\" " .. 获取环境变量("windir") .. "\\inf\\setupapi.dev.log", SW_HIDE)
 	-- 这里有问题，执行的结果永远为空。
 	msdri_inf_0x00 = string.find(子进程标准输出, "0x00", 1)
 	if nil ~= msdri_inf_0x00 then
@@ -737,7 +759,7 @@ function setup()
 	Log.info("=========================================")
 	Log.info("          正在安装声卡驱动……")
 	Log.info("=========================================")
-	local env_windir = os.getenv("windir")
+	local env_windir = 获取环境变量("windir")
 	local b,s = 执行子进程并取标准输出("cmd.exe /c drvload " .. env_windir .. "\\inf\\hdaudss.inf " .. env_windir .. "\\inf\\hdaudio.inf")
 	Log.info("b = " .. tostring(b) .. ",s=" .. s)
 	
@@ -767,7 +789,7 @@ function setup()
 	end
 	-- TODO：创建以下两个快捷方式
 	-- LINK %desktop%\加载无线网卡,%windir%\system32\pecmd.exe,"%ProgramFiles%\wifi.wcs",%windir%\system32\netshell.dll#157
-	OsExt.CreateShortCutEx(桌面目录 .. "\\加载无线网卡.lnk", ProgramFiles目录 .. "\\wifi.wcs", "%windir%\system32\netshell.dll#157")
+	OsExt.CreateShortCutEx(桌面目录 .. "\\加载无线网卡.lnk", "X:\\Windows\\system32\\pecmd.exe", "\"" .. ProgramFiles目录 .. "\\wifi.wcs\"", "X:\\Windows\\system32\\netshell.dll",157)
 	OsExt.CreateShortCut( 桌面目录 .. "\\宽带连接.lnk", "RASPHONE.PBK")
 	-- LINK %Desktop%\宽带连接,RASPHONE.PBK
 	创建快捷方式(桌面目录 .. "\\浏览器.lnk","X:\\Program Files (x86)\\TheWorld\\Application\\theworld.exe")
@@ -852,7 +874,7 @@ function setup()
 	Log.info("=========================================================")
 	Log.info("安装RNDIS(远端网络驱动接口协议)驱动，用于支持手机、USB网卡上网。")
 	Log.info("=========================================================")
-	local x_windows = os.getenv("windir")
+	local x_windows = 获取环境变量("windir")
 	执行子进程并等待它完成("cmd.exe /c drvload " .. x_windows .. "\\inf\\netrndis.inf " .. x_windows .. "\\inf\\wceisvista.inf")
 	-- 3 将IKEEXT服务设置为按需启动
 	注册表写整数("HKLM","SYSTEM\\ControlSet001\\Services\\IKEEXT\\start",3)
@@ -891,3 +913,6 @@ function setup()
 end
 
 setup()
+
+
+
