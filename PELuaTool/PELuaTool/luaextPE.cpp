@@ -115,6 +115,12 @@ int LFSetLogo(lua_State* l)
 	return 1;
 }
 
+int LFInitEnvironmentVariable(lua_State* l)
+{
+	InitEnvironmentVariable();
+	return 0;
+}
+
 static const struct luaL_Reg PEExtLib[] = {
 	{ "INIT", LFINIT },
 	{ "SHELL", LFSHELL },
@@ -124,6 +130,7 @@ static const struct luaL_Reg PEExtLib[] = {
 	{ "SetEnvironment", LFSetEnvironment },
 	{ "SetDesktopText", LFSetDesktopText },
 	{ "ShowUSBDisk", LFShowUSBDisk },
+	{ "InitEnvironmentVariable", LFInitEnvironmentVariable },
 	{ NULL, NULL },
 };
 
