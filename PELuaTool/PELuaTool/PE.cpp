@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <string>
 #include <Shlwapi.h>
+#include <ShlObj.h>
 #include <TlHelp32.h>
 #include <shellapi.h>
 #include "Resource.h"
@@ -8,6 +9,7 @@
 #include "util/StringEx.h"
 #include "util/Logger.h"
 #include "util/File.h"
+#include "../LibLuaBase/SystemCommon.h"
 using std::wstring;
 using std::string;
 #include "pe.h"
@@ -498,9 +500,9 @@ PTSTR UPathSplitName(PTSTR ptzPath)
 // Find process
 // 指定进程名，参数为空时返回父进程ID
 //
-HRESULT FindProc(PCTSTR ptzCmd)
+DWORD FindProcess(PCTSTR ptzCmd)
 {
-	HRESULT hResult = NULL;
+	DWORD hResult = NULL;
 	DWORD CurrentProcessId = GetCurrentProcessId();
 	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (hSnap != INVALID_HANDLE_VALUE)
@@ -586,7 +588,7 @@ DWORD WINAPI MainThread(_In_ LPVOID lpParameter)
 	// 如果设置了外壳程序，那么尝试调用外壳程序
 	//
 	PTSTR ShellName = UPathSplitName(MyShell);
-	if (MainWindowHwnd && !FindProc(ShellName))
+	if (MainWindowHwnd && !FindProcess(ShellName))
 	{
 		TCHAR EMenuTip[MAX_NAME] = TEXT("Shell process not run!");
 		wcscat(MenuTipText, EMenuTip);
@@ -595,7 +597,7 @@ DWORD WINAPI MainThread(_In_ LPVOID lpParameter)
 	}
 
 	LOG_INFO("尝试调用外壳程序。");
-	while (MyShell[0] && (!FindProc(ShellName)))
+	while (MyShell[0] && (!FindProcess(ShellName)))
 	{
 		Exec(MyShell);
 		Sleep(200);
@@ -756,8 +758,27 @@ void PE_SHELL(LPCTSTR lpShell)
 	SHSetValue(HKEY_LOCAL_MACHINE, PELOGON, PESHELL, REG_SZ, lpShell, wcslen(lpShell) * sizeof(TCHAR));
 }
 
+struct EnviDEF
+{
+	INT iFolder;
+	LPCTSTR ptzMacro;
+};
+
+const EnviDEF c_sMacro[] =
+{
+	{ CSIDL_FAVORITES,			TEXT("Favorites") },
+	{ CSIDL_DESKTOPDIRECTORY,	TEXT("Desktop") },
+	{ CSIDL_STARTMENU,			TEXT("StartMenu") },
+	{ CSIDL_STARTUP,			TEXT("Startup") },
+	{ CSIDL_PROGRAMS,			TEXT("Programs") },
+	{ CSIDL_SENDTO,				TEXT("SendTo") },
+	{ CSIDL_PERSONAL,			TEXT("Personal") },
+	{ CSIDL_APPDATA,			TEXT("QuickLaunch") },
+};
+
 #define Text_Environment TEXT("Environment")
 #define Session_Manager TEXT("SYSTEM\\CurrentControlSet\\Control\\Session Manager")
+
 BOOL PE_SetEnvironment(wstring ptzEnvName, wstring ptzEnvValue, BOOL bSystem)
 {
 	if (ptzEnvName.empty() || ptzEnvValue.empty())
@@ -767,7 +788,15 @@ BOOL PE_SetEnvironment(wstring ptzEnvName, wstring ptzEnvValue, BOOL bSystem)
 		return TRUE;
 	}
 
-	BOOL bResult = SetEnvironmentVariable(ptzEnvName.c_str(), ptzEnvValue.c_str()) ? S_OK : S_FALSE;
+	BOOL bResult = SetEnvironmentVariable(ptzEnvName.c_str(), ptzEnvValue.c_str());
+	if (bResult)
+	{
+		LOG_INFO("成功设置环境变量[%s] = [%s]", WS2S(ptzEnvName).c_str(), WS2S(ptzEnvValue).c_str());
+	}
+	else
+	{
+		LOG_INFO("设置环境变量[%s] = [%s]失败了，错误%d", WS2S(ptzEnvName).c_str(), WS2S(ptzEnvValue).c_str(), GetLastError());
+	}
 	
 	if (bSystem)
 	{
@@ -783,9 +812,71 @@ BOOL PE_SetEnvironment(wstring ptzEnvName, wstring ptzEnvValue, BOOL bSystem)
 	{
 		DWORD_PTR dwResult = 0;
 		SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)Text_Environment, SMTO_ABORTIFHUNG, 5000, &dwResult);
+		//::SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)Text_Environment);
 	}
 	return bResult;
 }
+
+VOID InitEnvironmentVariable()
+{
+	for (UINT i = 0; i < sizeof(c_sMacro)/sizeof(EnviDEF); i++)
+	{
+		LPCTSTR pEnvName = c_sMacro[i].ptzMacro;
+		TCHAR p[MAX_PATH] = { 0 };
+		if (SHGetSpecialFolderPath(NULL, p, c_sMacro[i].iFolder, TRUE))
+		{
+			if (c_sMacro[i].iFolder == CSIDL_APPDATA)
+			{
+				// Trick
+				_tcscat(p, TEXT("\\Microsoft\\Internet Explorer\\Quick Launch"));
+				os::FilePath::ForceCreateDir(p);
+			}
+			//Sets the contents of the specified environment variable for the current process.
+			BOOL bResult = SetEnvironmentVariable(pEnvName, p);
+			if (bResult)
+			{
+				LOG_INFO("成功设置环境变量[%s] = [%s]", WS2S(pEnvName).c_str(), WS2S(p).c_str());
+			}
+			else
+			{
+				LOG_INFO("设置环境变量[%s] = [%s]失败了，错误%d", WS2S(pEnvName).c_str(), WS2S(p).c_str(), GetLastError());
+			}
+			
+			TCHAR testBuf[256] = { 0 };
+			GetEnvironmentVariable(pEnvName, testBuf, _countof(testBuf));
+			LOG_INFO("验证环境变量取[%s]=[%s]", WS2S(pEnvName).c_str(), WS2S(testBuf).c_str());
+
+			wstring strRegPath(Session_Manager);
+			strRegPath += TEXT("\\");
+			strRegPath += Text_Environment;
+			BOOL isContentMacro = (wstring(p).find(L'%') != wstring::npos);
+			SHSetValue(HKEY_LOCAL_MACHINE, strRegPath.c_str(), pEnvName, isContentMacro ? REG_EXPAND_SZ : REG_SZ, p, _tcslen(p)*sizeof(TCHAR));
+			SHSetValue(HKEY_CURRENT_USER, Text_Environment, pEnvName, isContentMacro ? REG_EXPAND_SZ : REG_SZ, p, _tcslen(p)*sizeof(TCHAR));
+			SHSetValue(HKEY_CURRENT_USER, Text_Environment, pEnvName, isContentMacro ? REG_EXPAND_SZ : REG_SZ, p, _tcslen(p)*sizeof(TCHAR));
+		}
+	}
+	DWORD_PTR dwResult = 0;
+	//::SendMessage(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)Text_Environment);
+	
+	if (0 == SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)Text_Environment, SMTO_ABORTIFHUNG, 5000, &dwResult))
+	{
+		DWORD lastErr = GetLastError();
+		if (lastErr == ERROR_TIMEOUT)
+		{
+			LOG_INFO("广播环境变量变化时发生了超时错误");
+		}
+		else
+		{
+			LOG_INFO("广播环境变量变化时发生了错误%d", lastErr);
+		}
+	}
+	else
+	{
+		LOG_INFO("成功广播环境变量发生变化的消息。");
+	}
+	
+}
+
 
 INT UWStrToInt(PCWSTR pwzStr)
 {
