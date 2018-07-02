@@ -1272,6 +1272,13 @@ int LFGetProcessID(lua_State* l)
 	return 1;
 }
 
+int LFSetDragFullWindow(lua_State* l)
+{
+	BOOL bSet = lua_toboolean(l, 1);
+	::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, bSet, NULL, 0);
+	return 0;
+}
+
 #define OSEXT_VERSION "1.0.0.1"
 #define OSEXT_LIBNAME "OsExt"
 /*
@@ -1342,6 +1349,7 @@ static const struct luaL_Reg OsExtLib[] = {
 	{"SetFileAttributes", LFSetFileAttributes },
 	{"ApplyEnvironmentVarsChange", LFApplyEnvironmentVarsChange},
 	{"GetProcessId",LFGetProcessID},
+	{"SetDragFullWindow",LFSetDragFullWindow },
 	{NULL, NULL},
 };
 
