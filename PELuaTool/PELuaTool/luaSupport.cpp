@@ -50,6 +50,7 @@ static void initLuaScript()
 * \param strScript脚本字符串。注意不是脚本名，不是文件名！
 * \return 成功返回true否则返回false.
 */
+HRESULT PE_Text(LPCTSTR pszText, COLORREF color, LPCTSTR font, int FontSize, long left, long top, long right, long bottom);
 bool RunLuaScript(const std::string& strScript)
 {
 	bool bRet = false;
@@ -70,6 +71,9 @@ bool RunLuaScript(const std::string& strScript)
 		int t = lua_type(LuaS, -1);
 		const char* err = lua_tostring(LuaS, -1);
 		LOG_ERROR("LUA Error: %s\n", err);
+		WCHAR pMsg[4096] = { 0 };
+		MultiByteToWideChar(CP_ACP, 0, err, -1, pMsg, _countof(pMsg));
+		PE_Text(pMsg, RGB(255, 0, 0), _T("Microsoft YaHei"), 40, 200, 100, 800, 600);
 		MessageBoxA(NULL, err, err, MB_OK);
 		lua_pop(LuaS, 1);
 		//pvs Delete
