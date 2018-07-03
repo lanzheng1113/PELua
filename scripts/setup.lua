@@ -905,11 +905,18 @@ function setup()
 		end
 	end
 	
+	-- 
+	-- 设置拖动窗口时不显示窗口内容
+	--
+	OsExt.SetDragFullWindow(false)
+	
 	--
 	-- 将原来放到Y盘的WIM解压到PEProgram -- 
 	--
 	写桌面文本("正在加载相关工具.....",RGB红色,字体,字体大小,-1,-1, -1, -1)
 	dofile("X:\\Windows\\main.lua")
+	
+	--
 end
 
 setup()
