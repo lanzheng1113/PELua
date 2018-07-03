@@ -73,7 +73,7 @@ bool RunLuaScript(const std::string& strScript)
 		LOG_ERROR("LUA Error: %s\n", err);
 		WCHAR pMsg[4096] = { 0 };
 		MultiByteToWideChar(CP_ACP, 0, err, -1, pMsg, _countof(pMsg));
-		PE_Text(pMsg, RGB(255, 0, 0), _T("Microsoft YaHei"), 40, 200, 100, 800, 600);
+		PE_Text(pMsg, RGB(255, 0, 0), _T("Microsoft YaHei"), 40, 100, 100, 1024, 768);
 		MessageBoxA(NULL, err, err, MB_OK);
 		lua_pop(LuaS, 1);
 		//pvs Delete
