@@ -241,7 +241,7 @@ function 安装驱动(驱动包路径, 安装位置)
 	
 	-- 如果是custom*.7z或者是custom_64*.7z安装驱动前先保存一下现有的设备数
 	local ID1, ID2
-	if nil ~= string.find(fname,"custom") or nil ~= string.find(fname,"custom_64") then
+	if nil ~= string.find(fname,"custom") then
 		ID1 = hwids()
 	end
 	
@@ -262,7 +262,7 @@ function 安装驱动(驱动包路径, 安装位置)
 	OsExt.Sleep(500)
 	
 	-- 如果是custom*.7z或者是custom_64*.7z安装驱动后在临时目录尝试重新安装一次
-	if nil ~= string.find(fname,"custom") or nil ~= string.find(fname,"custom_64") then
+	if nil ~= string.find(fname,"custom") then
 		ID2 = hwids()
 		if ID1 ~= nil and ID2 ~=nil and ID1 < ID2 then
 			执行子进程并等待它完成("cmd.exe /c dpinst.exe /S /Path " .. 获取环境变量("temp") .. "\\pe-driver\\" .. fname)
@@ -352,13 +352,7 @@ function 安装自定义驱动(path)
 	写桌面文本("加载自定义驱动.....", RGB红色, 字体, 字体大小, -1, -1, -1, -1)
 	OsExt.Sleep(500)
 	local Drv = string.sub(path, 1, 1)
-	-- 如果存在默认的安装包就安装默认的，否则根据找到的第一个安装。
-	local default = drv .. ":\\WifiDriver\\custom_64.7z"
-	if 存在路径(default) then
-		安装驱动(default)
-	else
-		安装驱动(path)
-	end
+	安装驱动(path)
 end
 
 
@@ -456,11 +450,11 @@ end
 
 
 function 重新安装rtux64w10()
-	OsExt.DeepCopyFile(getenv("windir") .. "\\inf\\rtux64w10.inf", getenv("temp") .. "\\rtux64w10.inf")
-	OsExt.DeepCopyFile(getenv("windir") .. "\\inf\\rtux64w10.sys", getenv("temp") .. "\\rtux64w10.sys")
-	执行子进程并等待它完成("cmd.exe /c drvload " .. getenv("temp") .. "\\rtux64w10.inf")
-	删除文件(getenv("temp") .. "\\rtux64w10.inf")
-	删除文件(getenv("temp") .. "\\rtux64w10.sys")
+	OsExt.DeepCopyFile(getenv("windir") .. "\\inf\\rtux86w10.inf", getenv("temp") .. "\\rtux86w10.inf")
+	OsExt.DeepCopyFile(getenv("windir") .. "\\inf\\rtux86w10.sys", getenv("temp") .. "\\rtux86w10.sys")
+	执行子进程并等待它完成("cmd.exe /c drvload " .. getenv("temp") .. "\\rtux86w10.inf")
+	删除文件(getenv("temp") .. "\\rtux86w10.inf")
+	删除文件(getenv("temp") .. "\\rtux86w10.sys")
 end
 
 
@@ -505,7 +499,7 @@ function 设置系统DPI(p_dpi)
 	注册表删除子项("HKCU","Software\\Microsoft\\Windows NT\\CurrentVersion\\TaskManager\\Preferences",false)
 	注册表删除键值("HKCU","Software\\Microsoft\\Windows NT\\CurrentVersion\\TaskManager","Preferences")
 	if p_dpi > 0x60 and p_dpi < 0x84 then
-		RegIni.WriteINIStr("X:\\Program Files (x86)\\DesktopInfo\\desktopinfo.ini","options","width", "600")
+		RegIni.WriteINIStr("X:\\Program Files\\DesktopInfo\\desktopinfo.ini","options","width", "600")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","AllResolutions","Iconsize32","32")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Lister","Font1","新宋体,-20,134")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Lister","Font2","新宋体,-20,134")
@@ -513,14 +507,14 @@ function 设置系统DPI(p_dpi)
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Buttonbar","Buttonheight","33")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Buttonbar","SmallIcons","0")
 	elseif p_dpi >  0x84 and p_dpi < 0xa8 then
-		RegIni.WriteINIStr("X:\\Program Files (x86)\\DesktopInfo\\desktopinfo.ini","options","width", "750")
+		RegIni.WriteINIStr("X:\\Program Files\\DesktopInfo\\desktopinfo.ini","options","width", "750")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","AllResolutions","Iconsize32","32")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Lister","Font1","新宋体,-24,134")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Lister","Font2","新宋体,-24,134")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Lister","Font3","新宋体,-24,134")
 		RegIni.WriteINIStr("X:\\Windows\\tlb\\toolbars\\start\\setup.ini","settings","menuItemMarginY","12")
 	elseif p_dpi > 0xa8 then
-		RegIni.WriteINIStr("X:\\Program Files (x86)\\DesktopInfo\\desktopinfo.ini","options","width", "920")
+		RegIni.WriteINIStr("X:\\Program Files\\DesktopInfo\\desktopinfo.ini","options","width", "920")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","AllResolutions","Iconsize32","48")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Lister","Font1","新宋体,-32,134")
 		RegIni.WriteINIStr("X:\\Program Files\\TotalCommander\\WINCMD.INI","Lister","Font2","新宋体,-32,134")
@@ -601,7 +595,7 @@ function setup()
 	-- 开始菜单收藏夹隐藏
 	注册表写字符串("HKCU","Software\\IvoSoft\\ClassicStartMenu\\Settings", "Favorites", "Hide")
 	-- 
-	执行子进程并等待它完成( "cmd.exe /c regsvr32 /s " .. "\"" .. ProgramFiles目录 .. "\\Classic Shell\\StartMenuHelper64.dll\"", SW_HIDE)
+	执行子进程并等待它完成( "cmd.exe /c regsvr32 /s " .. "\"" .. ProgramFiles目录 .. "\\Classic Shell\\StartMenuHelper32.dll\"", SW_HIDE)
 	执行子进程("\"" .. ProgramFiles目录 .. "\\Classic Shell\\ClassicStartMenu.exe\"", SW_HIDE)
 	local iRet = 执行子进程并等待它完成("X:\\Windows\\System32\\winpeshl.exe", SW_SHOW) 
 	if iRet ~= 0 then
@@ -621,7 +615,7 @@ function setup()
 	end
 	-- 使用ShowDrivs_Gui_x64寻找和加载UDM分区
 	-- 命令ShowDrivs_Gui_x64.exe MOUN-udm -findboot -w \\.\PhysicalDrive* C-
-	执行子进程并等待它完成("\"" .. ProgramFiles目录 .. "\\ShowDrivs_Gui_x64.exe\"" .." MOUN-udm -findboot -w \\\\.\\PhysicalDrive* C-", SW_HIDE)
+	执行子进程并等待它完成("\"" .. ProgramFiles目录 .. "\\ShowDrivs_Gui_x86.exe\"" .." MOUN-udm -findboot -w \\\\.\\PhysicalDrive* C-", SW_HIDE)
 	-- 
 	-- 如果是系统启动选项带UDMBOOT，则尝试加载和显示所有未加载的U盘或USB移动硬盘分区
 	-- 
@@ -641,9 +635,10 @@ function setup()
 	if nil ~= string.find(SATA设备查询结果, "problem", 1) then
 		安装SATA驱动()
 	end
-	if nil ~= string.find(SATA设备查询结果, "running", 1) then
-		安装SATA驱动_VEN_8086()
-	end
+	
+	--if nil ~= string.find(SATA设备查询结果, "running", 1) then
+	--	安装SATA驱动_VEN_8086()
+	--end
 	
 	--
 	-- VEN_144D : 
@@ -658,10 +653,10 @@ function setup()
 	--
 	-- VEN_106B | Apple Inc. 各种设备
 	--      -CC_0180 NOT FOUND!
-	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c devcon status PCI\\VEN_144D* PCI\\VEN_106B*CC_0180",SW_HIDE)
-	if nil ~= string.find(子进程标准输出, "Name", 1) then
-		sapple()
-	end
+	-- 执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c devcon status PCI\\VEN_144D* PCI\\VEN_106B*CC_0180",SW_HIDE)
+	-- if nil ~= string.find(子进程标准输出, "Name", 1) then
+	-- 	sapple()
+	-- end
 	
 	删除文件("X:\\Windows\\desktop\\desktop.ini")
 	
@@ -681,8 +676,9 @@ function setup()
 					local full_path = Wifi驱动目录 .. "\\" .. file
 					local attr = lfs.attributes(full_path)
 					if attr.mode == "file" then
-						-- 寻找custom*.7z
-						if 1 == string.find(file, "custom", 1) and nil ~= string.find(file, ".7z", 1) then
+						-- 寻找custom.7z
+						fn_low = string.lower(file)
+						if fn_low == "custom.7z" then
 							自定义驱动包路径 = full_path
 							break
 						end
@@ -744,12 +740,18 @@ function setup()
 		安装和启动无线网卡驱动()
 	end
 	
+	执行结果,atom_touch = 执行子进程并取标准输出("cmd.exe /c devcon status INT33FD", SW_HIDE)
+	if nil ~= atom_touch then
+		if string.find(atom_touch,"problem") ~= nil then
+			执行子进程并等待它完成("cmd.exe /c drvload " .. 获取环境变量("windir") .. "\\touch\\pmic.inf")
+		end
+	end
 	--
 	-- 处理Realtek网卡驱动
 	-- Realtek USB FE/GbE NIC NDIS6.40 64-bit Driver
 	-- rtux64w10.sys
 	--
-	if 存在路径("X:\\Windows\\system32\\drivers\\rtux64w10.sys") then
+	if 存在路径("X:\\Windows\\system32\\drivers\\rtux86w10.sys") then
 		重新安装rtux64w10()
 	end
 	
@@ -784,15 +786,15 @@ function setup()
 	if 存在路径("X:\\Program Files\\Network\\[Network]WanDrv6.exe") then
 		创建快捷方式(桌面目录 .. "\\网卡万能驱动.lnk","X:\\Program Files\\Network\\[Network]WanDrv6.exe")
 	end
-	if 存在路径("X:\\Program Files (x86)\\TheWorld\\Application\\theworld.exe") then
-		创建快捷方式(桌面目录 .. "\\浏览器.lnk","X:\\Program Files (x86)\\TheWorld\\Application\\theworld.exe")
+	if 存在路径("X:\\Program Files\\TheWorld\\Application\\theworld.exe") then
+		创建快捷方式(桌面目录 .. "\\浏览器.lnk","X:\\Program Files\\TheWorld\\Application\\theworld.exe")
 	end
 	-- TODO：创建以下两个快捷方式
 	-- LINK %desktop%\加载无线网卡,%windir%\system32\pecmd.exe,"%ProgramFiles%\wifi.wcs",%windir%\system32\netshell.dll#157
 	OsExt.CreateShortCutEx(桌面目录 .. "\\加载无线网卡.lnk", "X:\\Windows\\system32\\pecmd.exe", "\"" .. ProgramFiles目录 .. "\\wifi.wcs\"", "X:\\Windows\\system32\\netshell.dll",157)
 	OsExt.CreateShortCut( 桌面目录 .. "\\宽带连接.lnk", "RASPHONE.PBK")
 	-- LINK %Desktop%\宽带连接,RASPHONE.PBK
-	创建快捷方式(桌面目录 .. "\\浏览器.lnk","X:\\Program Files (x86)\\TheWorld\\Application\\theworld.exe")
+	创建快捷方式(桌面目录 .. "\\浏览器.lnk","X:\\Program Files\\TheWorld\\Application\\theworld.exe")
 	local 开始菜单程序目录 = 获取开始菜单程序目录()
 	创建目录(开始菜单程序目录 .. "\\实用工具")
 	创建目录(开始菜单程序目录 .. "\\硬件驱动")
@@ -804,7 +806,7 @@ function setup()
 	-- LINK %programs%\硬件驱动\加载无线网卡,%windir%\system32\pecmd.exe,"%ProgramFiles%\wifi.wcs",%windir%\system32\netshell.dll#157
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\任务管理器.lnk","X:\\Windows\\System32\\taskmgr.exe")
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\7z文件.lnk","X:\\Program Files\\7-zip\\7zFM.exe")
-	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\浏览器.lnk","X:\\Program Files (x86)\\TheWorld\\Application\\theworld.exe")
+	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\浏览器.lnk","X:\\Program Files\\TheWorld\\Application\\theworld.exe")
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\记事本.lnk","X:\\Windows\\notepad.exe")
 	创建快捷方式(开始菜单程序目录 .. "\\实用工具\\屏幕键盘.lnk","X:\\Windows\\FreeVK.exe")
 	--LINK %programs%\实用工具\截图工具,%&myname%,%windir%\wall.ini sn,shell32.dll,141
