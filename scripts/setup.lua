@@ -544,7 +544,7 @@ end
 
 function IsMacBook()
 	Log.info("判断是不是MACBOOK")
-	local cmd = 获取环境变量("windir") .. "system32\\wbem\\WMIC.exe ComputerSystem get Model"
+	local cmd = 获取环境变量("windir") .. "\\system32\\wbem\\WMIC.exe ComputerSystem get Model"
 	执行结果,ComputerSystem_Model = 执行子进程并取标准输出(cmd,SW_HIDE)
 	ComputerSystem_Model = string.upper(ComputerSystem_Model)
 	if string.find(ComputerSystem_Model,"MACBOOK") then
