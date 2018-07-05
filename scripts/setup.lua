@@ -735,7 +735,7 @@ function setup()
 				end
 				删除目录(Target)
 				-- 启用trackPad右键
-				if 0 ~= PEExt.EnableAppleTrackPadRightClick() then
+				if 0 ~= PEExt.EnableAppleTrackPadRightClick(true) then
 					Log.error("启用Macbook track pad右键失败。")
 				end
 				-- 启动无线服务
