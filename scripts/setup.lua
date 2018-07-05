@@ -456,11 +456,11 @@ end
 
 
 function 重新安装rtux64w10()
-	OsExt.DeepCopyFile(getenv("windir") .. "\\inf\\rtux64w10.inf", getenv("temp") .. "\\rtux64w10.inf")
-	OsExt.DeepCopyFile(getenv("windir") .. "\\inf\\rtux64w10.sys", getenv("temp") .. "\\rtux64w10.sys")
-	执行子进程并等待它完成("cmd.exe /c drvload " .. getenv("temp") .. "\\rtux64w10.inf")
-	删除文件(getenv("temp") .. "\\rtux64w10.inf")
-	删除文件(getenv("temp") .. "\\rtux64w10.sys")
+	OsExt.DeepCopyFile(获取环境变量("windir") .. "\\inf\\rtux64w10.inf", 获取环境变量("temp") .. "\\rtux64w10.inf")
+	OsExt.DeepCopyFile(获取环境变量("windir") .. "\\inf\\rtux64w10.sys", 获取环境变量("temp") .. "\\rtux64w10.sys")
+	执行子进程并等待它完成("cmd.exe /c drvload " .. 获取环境变量("temp") .. "\\rtux64w10.inf")
+	删除文件(获取环境变量("temp") .. "\\rtux64w10.inf")
+	删除文件(获取环境变量("temp") .. "\\rtux64w10.sys")
 end
 
 
@@ -542,6 +542,17 @@ function 执行远程启动()
 	return false
 end
 
+function IsMacBook()
+	Log.info("判断是不是MACBOOK")
+	local cmd = 获取环境变量("windir") .. "system32\\wbem\\WMIC.exe ComputerSystem get Model"
+	执行结果,ComputerSystem_Model = 执行子进程并取标准输出(cmd,SW_HIDE)
+	ComputerSystem_Model = string.upper(ComputerSystem_Model)
+	if string.find(ComputerSystem_Model,"MACBOOK") then
+		return true
+	else
+		return false
+	end
+end
 
 function setup()
 
@@ -695,63 +706,104 @@ function setup()
 		安装自定义驱动(自定义驱动包路径)
 	end
 	
-	-- 
-	-- 修复Inter(R) PRO/1000 MT Network Connection
+
 	--
-	Log.info("=====================================================")
-	Log.info("         处理有线网卡")
-	Log.info("=====================================================")
-	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c devcon status *CC_0200", SW_HIDE)
-	if nil ~= string.find(子进程标准输出, "problem", 1) then
-		Log.info("需要安装/修复有线网卡驱动")
-		加载有线网卡驱动()
-	end
+	-- MacBook 适配
+	--
+	if IsMacBook() then
+		Log.info("=====================================================")
+		Log.info("         适配MacBook驱动")
+		Log.info("=====================================================")
+		-- 从U盘中释放AppleDrv.7z
+		盘符_Z = string.byte("Z",1)
+		for i = 0, 23 do
+			盘符 = 盘符_Z - i
+			Apple驱动包路径 = string.char(盘符) .. ":\\BOOT\\DRIVERS\\AppleDrv.7z"
+			if 存在路径(Apple驱动包路径) then
+				-- 释放到X:\\AppleDrv
+				local Target = "X:\\AppleDrv"
+				local path_7z = ProgramFiles目录 .. "\\7-zip\\7z.exe"
+				local exec_cmd = path_7z .. " x " .. Apple驱动包路径 .. " -o" .. Target
+				执行子进程并等待它完成(exec_cmd,SW_HIDE)
+				local 触控板inf路径 = "X:\\AppleDrv\\MultiTouchTrackPad64\\AppleMTP64.inf"
+				if 存在路径(触控板inf路径) then
+					执行子进程并等待它完成("cmd.exe /c drvload " .. 触控板inf路径)
+				end
+				local Wifi_INF = "X:\\AppleDrv\\Wireless64"
+				if 存在路径(Wifi_INF) then
+					执行子进程并等待它完成("cmd.exe /c drvload " .. Wifi_INF)
+				end
+				删除目录(Target)
+				-- 启用trackPad右键
+				if 0 ~= PEExt.EnableAppleTrackPadRightClick() then
+					Log.error("启用Macbook track pad右键失败。")
+				end
+				-- 启动无线服务
+				写桌面文本("正在启动无线服务.....", RGB红色, 字体, 字体大小, -1, -1, -1, -1)
+				OsExt.Sleep(500)
+				执行子进程并等待它完成("cmd.exe /c net start Wlansvc")
+				break
+			end
+		end		
+	else
+		-- 
+		-- 修复Inter(R) PRO/1000 MT Network Connection
+		--
+		Log.info("=====================================================")
+		Log.info("         处理有线网卡")
+		Log.info("=====================================================")
+		执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c devcon status *CC_0200", SW_HIDE)
+		if nil ~= string.find(子进程标准输出, "problem", 1) then
+			Log.info("需要安装/修复有线网卡驱动")
+			加载有线网卡驱动()
+		end
+		
+		Log.info("=====================================================")
+		Log.info("         处理无线网卡")
+		Log.info("=====================================================")
+		执行结果,CC_0280状态 = 执行子进程并取标准输出("cmd.exe /c devcon status *CC_0280", SW_HIDE)
+		CC_0280_Problem = false
+		if nil ~= string.find(CC_0280状态, "problem", 1) then
+			CC_0280_Problem = true
+		end
 	
-	Log.info("=====================================================")
-	Log.info("         处理无线网卡")
-	Log.info("=====================================================")
-	执行结果,CC_0280状态 = 执行子进程并取标准输出("cmd.exe /c devcon status *CC_0280", SW_HIDE)
-	CC_0280_Problem = false
-	if nil ~= string.find(CC_0280状态, "problem", 1) then
-		CC_0280_Problem = true
-	end
-	
-	-- 处理无线网卡
-	-- 1,在setupapi.dev.log中查找，调用devcon删除msdri.inf
-	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c find \"msdri.inf\'\" " .. 获取环境变量("windir") .. "\\inf\\setupapi.dev.log", SW_HIDE)
-	-- 这里有问题，执行的结果永远为空。
-	msdri_inf_0x00 = string.find(子进程标准输出, "0x00", 1)
-	if nil ~= msdri_inf_0x00 then
-		posbeg = string.find(子进程标准输出, "Published", 1) 
-		posend = string.find(子进程标准输出, ".", posbeg) -- 找到包含Published的一行
-		if posbeg ~= nil and posend ~= nil then
-			to_split = string.sub(子进程标准输出,posbeg,posend)
-			-- 以'字符分割字符串,如Published 'hdaudio.inf_amd64_a9d1a669e70897b9\hdaudio.inf' to 'hdaudio.inf'.
-			-- 取得上例中的hdaudio.inf
-			子串表 = 分割字符串(to_split,"\'")
-			if table.maxn(子串表) >= 4 then
-				需要删除的文件 = 子串表[4]
-				执行子进程并等待它完成("cmd.exe /c devcon dp_delete " .. 需要删除的文件)
+		-- 处理无线网卡
+		-- 1,在setupapi.dev.log中查找，调用devcon删除msdri.inf
+		执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c find \"msdri.inf\'\" " .. 获取环境变量("windir") .. "\\inf\\setupapi.dev.log", SW_HIDE)
+		-- 这里有问题，执行的结果永远为空。
+		msdri_inf_0x00 = string.find(子进程标准输出, "0x00", 1)
+		if nil ~= msdri_inf_0x00 then
+			posbeg = string.find(子进程标准输出, "Published", 1) 
+			posend = string.find(子进程标准输出, ".", posbeg) -- 找到包含Published的一行
+			if posbeg ~= nil and posend ~= nil then
+				to_split = string.sub(子进程标准输出,posbeg,posend)
+				-- 以'字符分割字符串,如Published 'hdaudio.inf_amd64_a9d1a669e70897b9\hdaudio.inf' to 'hdaudio.inf'.
+				-- 取得上例中的hdaudio.inf
+				子串表 = 分割字符串(to_split,"\'")
+				if table.maxn(子串表) >= 4 then
+					需要删除的文件 = 子串表[4]
+					执行子进程并等待它完成("cmd.exe /c devcon dp_delete " .. 需要删除的文件)
+				end
 			end
 		end
-	end
-	-- 2 如果无线网卡设备正在运行，则尝试启动无线服务
-	if nil ~= string.find(CC_0280状态, "running", 1) then
-		启动无线服务()
-	end
-	-- 3 安装和启动无线网卡驱动
-	if CC_0280_Problem or msdri_inf_0x00 ~= nil then
-		安装和启动无线网卡驱动()
+		-- 2 如果无线网卡设备正在运行，则尝试启动无线服务
+		if nil ~= string.find(CC_0280状态, "running", 1) then
+			启动无线服务()
+		end
+		-- 3 安装和启动无线网卡驱动
+		if CC_0280_Problem or msdri_inf_0x00 ~= nil then
+			安装和启动无线网卡驱动()
+		end
+		--
+		-- 处理Realtek网卡驱动
+		-- Realtek USB FE/GbE NIC NDIS6.40 64-bit Driver
+		-- rtux64w10.sys
+		--
+		if 存在路径("X:\\Windows\\system32\\drivers\\rtux64w10.sys") then
+			重新安装rtux64w10()
+		end
 	end
 	
-	--
-	-- 处理Realtek网卡驱动
-	-- Realtek USB FE/GbE NIC NDIS6.40 64-bit Driver
-	-- rtux64w10.sys
-	--
-	if 存在路径("X:\\Windows\\system32\\drivers\\rtux64w10.sys") then
-		重新安装rtux64w10()
-	end
 	
 	--
 	-- 安装声卡驱动
