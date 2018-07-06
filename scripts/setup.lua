@@ -705,8 +705,6 @@ function setup()
 	if 自定义驱动包路径 ~= nil then
 		安装自定义驱动(自定义驱动包路径)
 	end
-	
-
 	--
 	-- MacBook 适配
 	--
@@ -729,6 +727,7 @@ function setup()
 				if 存在路径(触控板inf路径) then
 					执行子进程并等待它完成("cmd.exe /c drvload " .. 触控板inf路径)
 				end
+				-- 安装macbook的wifi驱动
 				local Wifi_INF = "X:\\AppleDrv\\Wireless64"
 				if 存在路径(Wifi_INF) then
 					执行子进程并等待它完成("cmd.exe /c drvload " .. Wifi_INF)
@@ -758,42 +757,6 @@ function setup()
 			加载有线网卡驱动()
 		end
 		
-		Log.info("=====================================================")
-		Log.info("         处理无线网卡")
-		Log.info("=====================================================")
-		执行结果,CC_0280状态 = 执行子进程并取标准输出("cmd.exe /c devcon status *CC_0280", SW_HIDE)
-		CC_0280_Problem = false
-		if nil ~= string.find(CC_0280状态, "problem", 1) then
-			CC_0280_Problem = true
-		end
-	
-		-- 处理无线网卡
-		-- 1,在setupapi.dev.log中查找，调用devcon删除msdri.inf
-		执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c find \"msdri.inf\'\" " .. 获取环境变量("windir") .. "\\inf\\setupapi.dev.log", SW_HIDE)
-		-- 这里有问题，执行的结果永远为空。
-		msdri_inf_0x00 = string.find(子进程标准输出, "0x00", 1)
-		if nil ~= msdri_inf_0x00 then
-			posbeg = string.find(子进程标准输出, "Published", 1) 
-			posend = string.find(子进程标准输出, ".", posbeg) -- 找到包含Published的一行
-			if posbeg ~= nil and posend ~= nil then
-				to_split = string.sub(子进程标准输出,posbeg,posend)
-				-- 以'字符分割字符串,如Published 'hdaudio.inf_amd64_a9d1a669e70897b9\hdaudio.inf' to 'hdaudio.inf'.
-				-- 取得上例中的hdaudio.inf
-				子串表 = 分割字符串(to_split,"\'")
-				if table.maxn(子串表) >= 4 then
-					需要删除的文件 = 子串表[4]
-					执行子进程并等待它完成("cmd.exe /c devcon dp_delete " .. 需要删除的文件)
-				end
-			end
-		end
-		-- 2 如果无线网卡设备正在运行，则尝试启动无线服务
-		if nil ~= string.find(CC_0280状态, "running", 1) then
-			启动无线服务()
-		end
-		-- 3 安装和启动无线网卡驱动
-		if CC_0280_Problem or msdri_inf_0x00 ~= nil then
-			安装和启动无线网卡驱动()
-		end
 		--
 		-- 处理Realtek网卡驱动
 		-- Realtek USB FE/GbE NIC NDIS6.40 64-bit Driver
@@ -804,6 +767,42 @@ function setup()
 		end
 	end
 	
+	Log.info("=====================================================")
+	Log.info("         处理无线网卡")
+	Log.info("=====================================================")
+	执行结果,CC_0280状态 = 执行子进程并取标准输出("cmd.exe /c devcon status *CC_0280", SW_HIDE)
+	CC_0280_Problem = false
+	if nil ~= string.find(CC_0280状态, "problem", 1) then
+		CC_0280_Problem = true
+	end
+	
+	-- 安装无线网卡设备驱动
+	-- 1,在setupapi.dev.log中查找，调用devcon删除msdri.inf
+	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c find \"msdri.inf\'\" " .. 获取环境变量("windir") .. "\\inf\\setupapi.dev.log", SW_HIDE)
+	-- 这里有问题，执行的结果永远为空。
+	msdri_inf_0x00 = string.find(子进程标准输出, "0x00", 1)
+	if nil ~= msdri_inf_0x00 then
+		posbeg = string.find(子进程标准输出, "Published", 1) 
+		posend = string.find(子进程标准输出, ".", posbeg) -- 找到包含Published的一行
+		if posbeg ~= nil and posend ~= nil then
+			to_split = string.sub(子进程标准输出,posbeg,posend)
+			-- 以'字符分割字符串,如Published 'hdaudio.inf_amd64_a9d1a669e70897b9\hdaudio.inf' to 'hdaudio.inf'.
+			-- 取得上例中的hdaudio.inf
+			子串表 = 分割字符串(to_split,"\'")
+			if table.maxn(子串表) >= 4 then
+				需要删除的文件 = 子串表[4]
+				执行子进程并等待它完成("cmd.exe /c devcon dp_delete " .. 需要删除的文件)
+			end
+		end
+	end
+	-- 2 如果无线网卡设备正在运行，则尝试启动无线服务
+	if nil ~= string.find(CC_0280状态, "running", 1) then
+		启动无线服务()
+	end
+	-- 3 安装和启动无线网卡驱动
+	if CC_0280_Problem or msdri_inf_0x00 ~= nil then
+		安装和启动无线网卡驱动()
+	end
 	
 	--
 	-- 安装声卡驱动
@@ -968,7 +967,8 @@ function setup()
 	写桌面文本("正在加载相关工具.....",RGB红色,字体,字体大小,-1,-1, -1, -1)
 	dofile("X:\\Windows\\main.lua")
 	
-	--
+	-- 刷新桌面
+	
 end
 
 setup()
