@@ -597,6 +597,13 @@ function setup()
 	执行子进程并等待它完成("cmd.exe /c X:\\Windows\\system32\\startnet.cmd", SW_HIDE)
 	设置环境变量("APPDATA","X:\\Users\\Default\\AppData\\Roaming",true)
 	初始化系统环境变量()
+	
+	-- 隐藏回收站,网络
+	注册表写字符串("HKLM","Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel","{645FF040-5081-101B-9F08-00AA002F954E}","1")
+	注册表写字符串("HKLM","Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel","{F02C1A0D-BE21-4350-88B0-7367FC96EF3B}","1")
+	-- 开始菜单收藏夹隐藏
+	注册表写字符串("HKCU","Software\\IvoSoft\\ClassicStartMenu\\Settings", "Favorites", "Hide")
+	
 	-- 启动系统外壳(类似Explorer.exe)
 	PEExt.SHELL("X:\\Windows\\WinXShell.exe")
 	OsExt.Sleep(1000)
@@ -606,12 +613,6 @@ function setup()
 	--执行子进程("WinXShell.exe",SW_SHOW)
 	-- 设置SHELL风格
 	执行子进程并等待它完成("cmd.exe /c regedit /s \"" .. ProgramFiles目录 .. "\\Classic Shell\\cs.reg\"", SW_HIDE)
-	-- 隐藏回收站,网络
-	注册表写字符串("HKLM","Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel","{645FF040-5081-101B-9F08-00AA002F954E}","1")
-	注册表写字符串("HKLM","Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\HideDesktopIcons\\NewStartPanel","{F02C1A0D-BE21-4350-88B0-7367FC96EF3B}","1")
-	-- 开始菜单收藏夹隐藏
-	注册表写字符串("HKCU","Software\\IvoSoft\\ClassicStartMenu\\Settings", "Favorites", "Hide")
-	-- 
 	执行子进程并等待它完成( "cmd.exe /c regsvr32 /s " .. "\"" .. ProgramFiles目录 .. "\\Classic Shell\\StartMenuHelper64.dll\"", SW_HIDE)
 	执行子进程("\"" .. ProgramFiles目录 .. "\\Classic Shell\\ClassicStartMenu.exe\"", SW_HIDE)
 	local iRet = 执行子进程并等待它完成("X:\\Windows\\System32\\winpeshl.exe", SW_SHOW) 
@@ -967,8 +968,9 @@ function setup()
 	写桌面文本("正在加载相关工具.....",RGB红色,字体,字体大小,-1,-1, -1, -1)
 	dofile("X:\\Windows\\main.lua")
 	
-	-- 刷新桌面
 	VK_F5 = 0x74
+	--[[
+	-- 刷新桌面
 	OsExt.KeyDown(VK_F5)
 	-- 重复几次，避免F5按键卡住
 	OsExt.Sleep(100)
@@ -977,16 +979,19 @@ function setup()
 	OsExt.KeyUp(VK_F5) 
 	OsExt.Sleep(100)
 	OsExt.KeyUp(VK_F5) 
-	
+	]]
 	local DeskTopWnd = OsExt.GetDesktopWnd()
 	WM_KEYDOWN = 0x0100
 	WM_KEYUP = 0x0101
 	if DeskTopWnd ~= 0 then
+		Log.info("取得了桌面的句柄，尝试发送F5刷新桌面")
 		OsExt.PostMessage(DeskTopWnd,WM_KEYDOWN,VK_F5,0)
 		OsExt.Sleep(200)
 		OsExt.PostMessage(DeskTopWnd,WM_KEYUP,VK_F5,0)
 		OsExt.Sleep(200)
 	end
+	
+	OsExt.ShellNotifyAssoChanged()
 end
 
 setup()
