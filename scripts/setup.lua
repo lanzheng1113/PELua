@@ -968,7 +968,25 @@ function setup()
 	dofile("X:\\Windows\\main.lua")
 	
 	-- 刷新桌面
+	VK_F5 = 0x74
+	OsExt.KeyDown(VK_F5)
+	-- 重复几次，避免F5按键卡住
+	OsExt.Sleep(100)
+	OsExt.KeyUp(VK_F5)
+	OsExt.Sleep(100)
+	OsExt.KeyUp(VK_F5) 
+	OsExt.Sleep(100)
+	OsExt.KeyUp(VK_F5) 
 	
+	local DeskTopWnd = OsExt.GetDesktopWnd()
+	WM_KEYDOWN = 0x0100
+	WM_KEYUP = 0x0101
+	if DeskTopWnd ~= 0 then
+		OsExt.PostMessage(DeskTopWnd,WM_KEYDOWN,VK_F5,0)
+		OsExt.Sleep(200)
+		OsExt.PostMessage(DeskTopWnd,WM_KEYUP,VK_F5,0)
+		OsExt.Sleep(200)
+	end
 end
 
 setup()
