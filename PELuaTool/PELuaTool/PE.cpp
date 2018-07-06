@@ -408,8 +408,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			PopupLogonMenu(hWnd);
 			break;
 		case WM_RBUTTONUP:
-			PopupLogonMenu(hWnd);
-			break;
+			{
+				PopupLogonMenu(hWnd);
+				BOOL bxx = IsWindowVisible(MainWindowHwnd);
+				TCHAR szTitle[256] = { 0 };
+				GetWindowText(MainWindowHwnd, szTitle, _countof(szTitle));
+				if (bxx)
+				{
+					LOG_INFO("主窗口可见,标题:%s",WS2S(szTitle).c_str());
+				}
+				else
+				{
+					LOG_INFO("主窗口不可见,标题:%s",WS2S(szTitle).c_str());
+				}
+				break;
+			}
 		}
 		break;
 
@@ -441,20 +454,14 @@ HWND CreateMainWindow(HINSTANCE hInstance/*, int nCmdShow*/)
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = NULL;
 
-	if (1)
+	if (RegisterClassEx(&wcex))
 	{
-		if (RegisterClassEx(&wcex))
-		{
-			hResult = CreateWindow(szWindowClass,
-				szWindowName,
-				WS_DISABLED | WS_MINIMIZE,
-				CW_USEDEFAULT, 0,
-				CW_USEDEFAULT, 0,
-				NULL, NULL, hInstance, NULL);
-		}
-		//TCHAR ChineseMenuTip[MAX_NAME];
-		//UINT16ToUStr(ChineseMenuTip, AppTrayText, _NumOf(AppTrayText));
-		//UStrCat(MenuTipText, (PTSTR)((DWORD)ChineseMenuTip*(!NotChineseLangID)));
+		hResult = CreateWindow(szWindowClass,
+			szWindowName,
+			WS_DISABLED | WS_MINIMIZE,
+			CW_USEDEFAULT, 0,
+			CW_USEDEFAULT, 0,
+			NULL, NULL, hInstance, NULL);
 	}
 	return hResult;
 }
@@ -536,6 +543,33 @@ DWORD FindProcess(PCTSTR ptzCmd)
 		}
 		CloseHandle(hSnap);
 	}
+
+
+	if (!ptzCmd && hResult)
+	{
+		DWORD pidParent = hResult;
+		BOOL bParentExist = FALSE;
+		HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+		if (hSnap != INVALID_HANDLE_VALUE)
+		{
+			PROCESSENTRY32 pe;
+			pe.dwSize = sizeof(PROCESSENTRY32);
+			for (BOOL b = Process32First(hSnap, &pe); b; b = Process32Next(hSnap, &pe))
+			{
+				if (pe.th32ProcessID == pidParent)
+				{
+					LOG_INFO("父进程为%s", WS2S(pe.szExeFile).c_str());
+					bParentExist = TRUE;
+					break;
+				}
+			}
+			CloseHandle(hSnap);
+		}
+		if (!bParentExist)
+		{
+			LOG_INFO("当前进程的父进程已经不存在。");
+		}
+	}
 	return hResult;
 }
 
@@ -603,6 +637,7 @@ DWORD WINAPI MainThread(_In_ LPVOID lpParameter)
 	}
 
 	LOG_INFO("尝试调用外壳程序。");
+	FindProcess(NULL);
 	while (MyShell[0] && (!FindProcess(ShellName)))
 	{
 		Exec(MyShell);
@@ -723,6 +758,7 @@ int PEMain(const wstring& szLuaFile)
 		DispatchMessage(&msg);
 	}
 	// Exit
+	LOG_INFO("主窗口退出.");
 	InstallHookKeyBoard(FALSE);
 	return (HRESULT)msg.wParam;
 }
