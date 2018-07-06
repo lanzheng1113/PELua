@@ -68,6 +68,7 @@ extern "C"
 #include "../Macros.h"
 #include "util/CommonWinFuns.h"
 #include "util/Logger.h"
+#include "util/StringConverter.h"
 
 /**
  * \defgroup LUA_OSEXT LUA脚本:OsExt模块
@@ -1004,12 +1005,28 @@ BOOL ExecSubProcess(LPCWSTR szCmd, WORD ShowWnd, DWORD waitTime, OUT string& Res
 				hOutPutFile = NULL;
 			}
 			//
-			// 有些进程的输出的字符串比较特殊，不一定是ANSI字符串，不加转换返回原始数据，让调用者拿到数据后自行转换。
+			// 有些进程的输出的字符串比较特殊，不一定是ANSI字符串.
 			//
 			FileReader fr(String::fromStdWString(szTempFileName));
 			if (fr.open())
 			{
-				Result = fr.read();
+				string temp = fr.read();
+				if (temp.length() > 2 && temp[0] == '\xFF' && temp[1] == '\xFE')
+				{
+					//UNICODE编码的文件
+					PWCHAR pUnicodeText = new WCHAR[temp.length()+1];
+					memset(pUnicodeText, 0, temp.length()*sizeof(WCHAR));
+					memcpy(pUnicodeText, temp.data()+2, temp.length()-2);
+					Result = String::fromStdWString(wstring(pUnicodeText));
+					delete[] pUnicodeText;
+				}
+				else if (temp.length() > 3 && temp[0] == '\xEF' && temp[1] == '\xBB' && temp[2] == '\xBF')
+				{
+					//UTF-8编码
+					Result = StringConverter::UTF8ToLocalString(temp.substr(3));
+				}
+				else
+					Result = temp;
 			}
 			LOG_INFO("子进程[%s]退出码[%d],标准输出：", String::fromStdWString(szCmd).c_str(), *pExitCode);
 			LOG_INFO("%s", Result.c_str());
@@ -1272,6 +1289,28 @@ int LFGetProcessID(lua_State* l)
 	return 1;
 }
 
+int LFKeyDown(lua_State* l)
+{
+	//#define VK_F5 0x74
+	BYTE byteKey = (BYTE)(lua_tointeger(l,1) && (0x000000FF));
+	keybd_event(byteKey, 0, 0, 0);
+	return 0;
+}
+
+int LFKeyUp(lua_State* l)
+{
+	BYTE byteKey = (BYTE)(lua_tointeger(l, 1) && (0x000000FF));
+	keybd_event(byteKey, 0, KEYEVENTF_KEYUP, 0);
+	return 0;
+}
+
+int LFGetDesktopWnd(lua_State* l)
+{
+	HWND hwndDesktop = (HWND)lua_tointeger(l, 1);
+	lua_pushinteger(l, (lua_Integer)hwndDesktop);
+	return 1;
+}
+
 int LFSetDragFullWindow(lua_State* l)
 {
 	BOOL bSet = lua_toboolean(l, 1);
@@ -1350,6 +1389,9 @@ static const struct luaL_Reg OsExtLib[] = {
 	{"ApplyEnvironmentVarsChange", LFApplyEnvironmentVarsChange},
 	{"GetProcessId",LFGetProcessID},
 	{"SetDragFullWindow",LFSetDragFullWindow },
+	{"KeyDown" ,LFKeyDown},
+	{"KeyUp" ,LFKeyUp},
+	{"GetDesktopWnd", LFGetDesktopWnd},
 	{NULL, NULL},
 };
 
