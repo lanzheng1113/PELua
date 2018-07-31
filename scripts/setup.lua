@@ -382,9 +382,10 @@ function 启动无线服务()
 	TEAM TEXT 加载无线连接配置.....#LTRB + $20:Microsoft YaHei UI|WAIT 500
 	forx %&fdrive%\WifiDriver\*.xml,&&con,0,exec !cmd.exe /c netsh wlan add profile filename=%&con%
 	]]
-	写桌面文本("启动无线服务.....", RGB红色, 字体, 字体大小, -1, -1, -1, -1)
+	写桌面文本("正在启动无线服务.....", RGB红色, 字体, 字体大小, -1, -1, -1, -1)
 	OsExt.Sleep(500)
 	执行子进程并等待它完成("cmd.exe /c net start Wlansvc")
+	执行子进程("X:\\Windows\\WiFiBuddy\\WiFiBuddy.exe")
 	OsExt.Sleep(100)
 	local WiFi配置文件存在 = false
 	local Wifi驱动目录 = nil
@@ -443,15 +444,16 @@ function 安装和启动无线网卡驱动()
 		无线驱动包路径2 = "X:\\WifiDriver\\DRIVERS_NET_WIRELESS_64_2.7z"
 	end
 	local 桌面目录 = 获取桌面目录()
-	if 存在路径(无线驱动包路径1) then
-		-- 创建快捷方式 LINK %desktop%\搜索安装无线驱动,%&myname%,wifi.wcs,netshell.dll,157,,%programfiles%
-		OsExt.CreateShortCutEx(桌面目录 .. "\\搜索安装无线驱动.lnk", "X:\\Windows\\System32\\pecmd.exe", "wifi.wcs", "netshell.dll", 157, ProgramFiles目录)
+	if 存在路径(无线驱动包路径1) or 存在路径(无线驱动包路径2) then
 		写桌面文本("加载无线网卡驱动.....", RGB红色, 字体, 字体大小, -1, -1, -1, -1)
-		安装驱动(无线驱动包路径1)
-		return
-	end
-	if 存在路径(无线驱动包路径2) then
-		安装驱动(无线驱动包路径2)
+		if 存在路径(无线驱动包路径1) then
+			-- 创建快捷方式 LINK %desktop%\搜索安装无线驱动,%&myname%,wifi.wcs,netshell.dll,157,,%programfiles%
+			OsExt.CreateShortCutEx(桌面目录 .. "\\搜索安装无线驱动.lnk", "X:\\Windows\\System32\\pecmd.exe", "wifi.wcs", "netshell.dll", 157, ProgramFiles目录)
+			安装驱动(无线驱动包路径1)
+		end
+		if 存在路径(无线驱动包路径2) then
+			安装驱动(无线驱动包路径2)
+		end
 	end
 	启动无线服务()
 end
@@ -752,6 +754,7 @@ function setup()
 				写桌面文本("正在启动无线服务.....", RGB红色, 字体, 字体大小, -1, -1, -1, -1)
 				OsExt.Sleep(500)
 				执行子进程并等待它完成("cmd.exe /c net start Wlansvc")
+				执行子进程("X:\\Windows\\WiFiBuddy\\WiFiBuddy.exe")
 				break
 			end
 		end		
@@ -773,7 +776,7 @@ function setup()
 		-- Realtek USB FE/GbE NIC NDIS6.40 64-bit Driver
 		-- rtux64w10.sys
 		--
-		if not 存在路径("X:\\Windows\\system32\\drivers\\rtux64w10.sys") then
+		if 存在路径("X:\\Windows\\system32\\drivers\\rtux64w10.sys") then
 			重新安装rtux64w10()
 		end
 	end
@@ -978,30 +981,6 @@ function setup()
 	写桌面文本("正在加载相关工具.....",RGB红色,字体,字体大小,-1,-1, -1, -1)
 	dofile("X:\\Windows\\main.lua")
 	
-	VK_F5 = 0x74
-	--[[
-	-- 刷新桌面
-	OsExt.KeyDown(VK_F5)
-	-- 重复几次，避免F5按键卡住
-	OsExt.Sleep(100)
-	OsExt.KeyUp(VK_F5)
-	OsExt.Sleep(100)
-	OsExt.KeyUp(VK_F5) 
-	OsExt.Sleep(100)
-	OsExt.KeyUp(VK_F5) 
-	]]
-	local DeskTopWnd = OsExt.GetDesktopWnd()
-	WM_KEYDOWN = 0x0100
-	WM_KEYUP = 0x0101
-	if DeskTopWnd ~= 0 then
-		Log.info("取得了桌面的句柄，尝试发送F5刷新桌面")
-		OsExt.PostMessage(DeskTopWnd,WM_KEYDOWN,VK_F5,0)
-		OsExt.Sleep(200)
-		OsExt.PostMessage(DeskTopWnd,WM_KEYUP,VK_F5,0)
-		OsExt.Sleep(200)
-	end
-	
-	OsExt.ShellNotifyAssoChanged()
 end
 
 setup()
