@@ -296,6 +296,8 @@ function 修改WinNTSetup文件(tag)
 end
 
 
+-- 注：我们的PE中没有DRIVERS_RAID.7z这个驱动包。
+-- 因此这个函数执行后没有任何效果。
 function 安装SATA驱动()
 	local the_7z = ProgramFiles目录 .. "\\DRIVERS_RAID.7z"
 	local target = 获取环境变量("SystemDrive") .. "\\raid"
@@ -626,7 +628,14 @@ function setup()
 	if Public目录 ~= "" then
 		删除文件(Public目录 .. "\\desktop\\desktop.ini")
 	end
-	-- 检查、安装USB驱动
+	-- 检查、安装USB 3.0驱动(仅Fresco和VIA,Intel已经在PE中内置)
+	-- VEN_1B73 Fresco Logic(美商睿思科技) 
+	--         DEV_1* == xHC1 Controller
+	-- VEN_1106 VIA Technologies, Inc.
+	--         DEV_9201\9202 == USB3.0 Controller
+	--         DEV_3432 == VL80x xHCI USB 3.0 Controller
+	--         DEV_3483 == VL805 USB 3.0 Host Controller
+	--         DEV_3515 == 未知
 	执行结果,子进程标准输出 = 执行子进程并取标准输出("cmd.exe /c devcon status PCI\\VEN_1B73*DEV_1* PCI\\VEN_1106*DEV_9202 PCI\\VEN_1106*DEV_9201 PCI\\VEN_1106*DEV_3432 PCI\\VEN_1106*DEV_3483 PCI\\VEN_1106*DEV_3515",SW_HIDE)
 	if nil ~= string.find(子进程标准输出,"Name",1) then
 		安装驱动(ProgramFiles目录 .. "\\DRIVERS_USB.7z")
@@ -679,6 +688,7 @@ function setup()
 	
 	------------------------------------------------------------
 	-- 安装自定义驱动，在?:\\WifiDriver目录下，名为custom*.7z
+	-- 注：当前版本没有自定义驱动需要安装
 	------------------------------------------------------------
 	盘符_Z = string.byte("Z",1)
 	-- 寻找?:\\WifiDriver\\custom(_64)*.7z, 如果找到就安装它
@@ -763,7 +773,7 @@ function setup()
 		-- Realtek USB FE/GbE NIC NDIS6.40 64-bit Driver
 		-- rtux64w10.sys
 		--
-		if 存在路径("X:\\Windows\\system32\\drivers\\rtux64w10.sys") then
+		if not 存在路径("X:\\Windows\\system32\\drivers\\rtux64w10.sys") then
 			重新安装rtux64w10()
 		end
 	end
