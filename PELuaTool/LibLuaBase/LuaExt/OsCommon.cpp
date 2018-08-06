@@ -1318,6 +1318,27 @@ int LFSetDragFullWindow(lua_State* l)
 	return 0;
 }
 
+int LFSplitString(lua_State* l)
+{
+	const char* lpcstrToSplit = lua_tostring(l, 1);
+	const char* lpcstrToken = lua_tostring(l, 2);
+	if (lpcstrToSplit && lpcstrToSplit[0] && lpcstrToken && lpcstrToken[0])
+	{
+		StringList sl = String(lpcstrToSplit).split(lpcstrToken);
+		/* create table. */
+		lua_newtable(l);
+		/* push (key, value). */
+		for (int i = 0; i != sl.size(); i++)
+		{
+			lua_pushinteger(l, i + 1); //´Ó1¿ªÊ¼
+			lua_pushstring(l, sl[i].c_str());
+			lua_settable(l, -3);
+		}
+		/* deal return. */
+		return 1;
+	}
+}
+
 #define OSEXT_VERSION "1.0.0.1"
 #define OSEXT_LIBNAME "OsExt"
 /*
@@ -1392,6 +1413,7 @@ static const struct luaL_Reg OsExtLib[] = {
 	{"KeyDown" ,LFKeyDown},
 	{"KeyUp" ,LFKeyUp},
 	{"GetDesktopWnd", LFGetDesktopWnd},
+	{"SplitString", LFSplitString},
 	{NULL, NULL},
 };
 
