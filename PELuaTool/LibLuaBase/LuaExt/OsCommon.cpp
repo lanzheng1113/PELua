@@ -1337,6 +1337,11 @@ int LFSplitString(lua_State* l)
 		/* deal return. */
 		return 1;
 	}
+	else
+	{
+		lua_newtable(l);
+		return 1;
+	}
 }
 
 #define OSEXT_VERSION "1.0.0.1"
