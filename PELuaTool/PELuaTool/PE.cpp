@@ -1025,6 +1025,7 @@ BOOL PassWordEditEnter;
 UINT fontsize = 14;
 
 
+// Ð´ÎÄ±¾
 HRESULT OutPutText(HDC hDC)
 {
 	SetBkMode(hDC, TRANSPARENT);
