@@ -1,0 +1,8 @@
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{1b283861-754f-4022-ad47-a5eaaa618894}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{1ee7337f-85ac-45e2-a23c-37c753209769}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{600e7adb-da3e-41a4-9225-3c0399e88c0c}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{8FD7E19C-3BF7-489B-A72C-846AB3678C96}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{94596c7e-3744-41ce-893e-bbf09122f76a}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{BEC09223-B018-416D-A0AC-523971B639F5}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{e74e57b0-6c6d-44d5-9cda-fb2df5ed7435}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{F8A0B131-5F68-486c-8040-7E8FC3C85BB6}

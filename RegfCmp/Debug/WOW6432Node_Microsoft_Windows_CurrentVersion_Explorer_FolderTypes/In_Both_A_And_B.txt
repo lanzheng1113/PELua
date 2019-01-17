@@ -1,0 +1,1 @@
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\FolderTypes\{5c4f28b5-f869-4e84-8e60-f11db97c5cc7}

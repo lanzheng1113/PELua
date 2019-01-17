@@ -1,0 +1,5 @@
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows NT\CurrentVersion\BootMgr
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Drivers32
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Svchost
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Windows
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Winlogon

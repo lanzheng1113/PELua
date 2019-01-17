@@ -1,0 +1,2 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{C2F86198-03CA-4771-8D4C-CE6E15CBCA56}
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\CurrentVersion\WINEVT\Publishers\{d386cc7a-620a-41c1-abf5-55018c6c699a}

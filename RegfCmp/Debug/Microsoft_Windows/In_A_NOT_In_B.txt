@@ -1,0 +1,8 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\ClickNote
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\EnterpriseResourceManager
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\HTML Help
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\ScheduledDiagnostics
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\ScriptedDiagnosticsProvider
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\Shell
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\TabletPC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\Windows Search

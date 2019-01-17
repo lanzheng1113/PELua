@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+[-HKEY_LOCAL_MACHINE\AANewBee\Intel]
+[-HKEY_LOCAL_MACHINE\AANewBee\Macromedia]
+[-HKEY_LOCAL_MACHINE\AANewBee\ODBC]
+[-HKEY_LOCAL_MACHINE\AANewBee\OEM]
+[-HKEY_LOCAL_MACHINE\AANewBee\Partner]
+[-HKEY_LOCAL_MACHINE\AANewBee\PELOGON]
+[-HKEY_LOCAL_MACHINE\AANewBee\Stardock]

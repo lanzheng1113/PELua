@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+[-HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Intel]
+[-HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Macromedia]
+[-HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\ODBC]

@@ -1,0 +1,3 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-iaLPSS-GPIO/Analytic
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-iaLPSS2-I2C/Debug
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-iaLPSS2-I2C/Performance

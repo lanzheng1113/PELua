@@ -1,0 +1,4 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{3610eda5-77ef-11d2-8dc5-00c04fa31a66}
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{827D319E-6EAC-11D2-A4EA-00C04F79F83A}
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{e437bc1c-aa7d-11d2-a382-00c04f991e27}

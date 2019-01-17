@@ -1,0 +1,43 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Accessibility
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\AdaptiveDisplayBrightness
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\AppCompatFlags
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Audit
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\BackgroundModel
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\ClipSVC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\CorruptedFileRecovery
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\DefaultProductKey
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\DeviceDisplayObjects
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\DiskDiagnostics
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\drivers.desc
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Event Viewer
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\FontMapperFamilyFallback
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\ICM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Image File Execution Options
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\KnownFunctionTableDlls
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\KnownManagedDebuggingDlls
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\MCI Extensions
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\MCI32
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\MsiCorruptedFileRecovery
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\NoImeModeImes
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\NowPlayingSessionManager
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\OpenGLDrivers
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\PeerDist
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\PeerNet
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Perflib
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\PerHwIdStorage
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Ports
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Print
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\ProfileNotification
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\RemoteRegistry
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Schedule
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\SecEdit
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Sensor
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\SRUM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Superfetch
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\TokenBroker
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Tracing
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\UAC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\UnattendSettings
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\WiFiDirectAPI
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\WirelessDocking

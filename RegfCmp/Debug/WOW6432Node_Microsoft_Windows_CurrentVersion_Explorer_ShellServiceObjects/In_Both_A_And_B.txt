@@ -1,0 +1,3 @@
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\ShellServiceObjects\{3BF043EF-A974-49B3-8322-B853CF1E5EC5}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\ShellServiceObjects\{59EFE487-E5B8-4fae-9D2C-FCDF0B70CE70}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\ShellServiceObjects\{A8CD0ADC-23D6-4B79-BCC9-D3309DF34760}

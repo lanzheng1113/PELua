@@ -1,0 +1,5 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\CurrentVersion
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\DWM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\ITStorage
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\Tablet PC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows\Windows Error Reporting

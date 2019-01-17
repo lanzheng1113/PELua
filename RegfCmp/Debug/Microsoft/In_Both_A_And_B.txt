@@ -1,0 +1,51 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Advanced INF Setup
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\AllUserInstallAgent
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Command Processor
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Cryptography
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\CTF
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Device Association Framework
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DirectX
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Driver Signing
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\EnterpriseCertificates
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\EventSystem
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Function Discovery
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\HTMLHelp
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IMAPI
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IME
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IMEJP
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IMEKR
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IMETC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\InputMethod
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MMC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\NetSh
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Network
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Non-Driver Signing
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Notepad
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\ODBC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Office
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Ole
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Palm
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\PolicyManager
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Ras
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Rpc
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\SecurityManager
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\SideShow
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\SystemCertificates
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\TabletTip
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Tcpip
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\TouchPrediction
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Tpm
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Tracing
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Wbem
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WcmSvc
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WIMMount
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Phone
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Photo Viewer
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Script Host
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WindowsRuntime
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WindowsSelfHost
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Wisp
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Wow64

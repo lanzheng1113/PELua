@@ -1,0 +1,12 @@
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Component Based Servicing
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Controls Folder
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\InkPresenter
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\InstallAgent
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\MMDevices
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\SelectiveRemoteWipe
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Shell Extensions
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Themes
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\TwinUI
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\WindowsStore

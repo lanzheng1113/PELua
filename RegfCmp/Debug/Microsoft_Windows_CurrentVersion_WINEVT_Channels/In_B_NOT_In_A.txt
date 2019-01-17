@@ -1,0 +1,11 @@
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-iaLPSS2-GPIO2/Debug
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-iaLPSS2-GPIO2/Performance
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-iaLPSS2-SPI/Debug
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-iaLPSS2-SPI/Performance
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-iaLPSS2-UART2/Analytic
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-ISH-BUS/Debug
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-ISH-BUS/Performance
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-ISH-HECI/Debug
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-ISH-HECI/Performance
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-ISH-HID/Debug
+HKEY_LOCAL_MACHINE\AALMT\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-ISH-HID/Performance

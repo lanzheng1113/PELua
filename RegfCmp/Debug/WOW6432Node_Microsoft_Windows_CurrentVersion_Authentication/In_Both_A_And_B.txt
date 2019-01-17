@@ -1,0 +1,2 @@
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Provider Filters
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers

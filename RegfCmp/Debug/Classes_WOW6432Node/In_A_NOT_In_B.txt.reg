@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+[-HKEY_LOCAL_MACHINE\AANewBee\Classes\WOW6432Node\DirectShow]
+[-HKEY_LOCAL_MACHINE\AANewBee\Classes\WOW6432Node\Media Type]
+[-HKEY_LOCAL_MACHINE\AANewBee\Classes\WOW6432Node\MediaFoundation]

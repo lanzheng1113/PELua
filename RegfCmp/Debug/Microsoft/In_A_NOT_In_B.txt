@@ -1,0 +1,131 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\.NETFramework
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\AccountsControl
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Active Setup
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\ActiveSync
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\ADs
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\ALG
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\AMSI
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Analog
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\AppServiceProtocols
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Assistance
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\AuthHost
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\BidInterface
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\CallAndMessagingEnhancement
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Cellular
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Chkdsk
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\ClipboardServer
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\COM3
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\CommsAPHost
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Composition
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DataAccess
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DataCollection
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DataSharing
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DDDS
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DiagnosticLogCSP
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DirectDraw
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DirectInput
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DirectMusic
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DirectPlay8
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DirectPlayNATHelp
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DirectShow
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DRM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DVR
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\DXP
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\EAPSIMMethods
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Enrollment
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Enrollments
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\EnterpriseResourceManager
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\F12
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\FamilyStore
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Fax
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\FaxServer
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Feeds
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\FilePicker
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\FilterDS
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\FTH
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Fusion
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\GameOverlay
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IdentityCRL
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IdentityStore
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IHDS
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\InProcLogger
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Input
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Account Manager
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Domains
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\IsoBurn
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MdmCommon
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MediaEngine
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MediaPlayer
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MemoryDiagnostic
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MessengerService
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Microsoft Camera Codec Pack
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Mobile
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MSBuild
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MSDE
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MSDRM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MSDTC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MSF
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MSLicensing
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MSN Apps
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\MTF
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Multimedia
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Multivariant
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\NET Framework Setup
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\OEM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\OnlineProviders
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Outlook Express
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Phone
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Photos
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\PIM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\PLA
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\PointOfService
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Policies
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Poom
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\PowerShell
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Print
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Provisioning
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\PushRouter
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\RADAR
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\RcsPresence
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\RendezvousApps
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Router
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\SchedulingAgent
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Security Center
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Sensors
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Shared Tools
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Shared Tools Location
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Shell
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Speech
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Speech_OneCore
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\SQMClient
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Sync Framework
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Sysprep
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\SystemSettings
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\TableTextService
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Terminal Server Client
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\TPG
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Transaction Server
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\TV System Services
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\uDRM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Unified Store
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Unistore
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\UPnP Control Point
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\UPnP Device Host
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\UserData
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Virtual Machine
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WAB
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Wallet
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Defender
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Desktop Search
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Mail
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Media Device Manager
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Media Foundation
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Media Player NSS
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Messaging Subsystem
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Portable Devices
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows Search
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WindowsStore
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WindowsUpdate
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WlanSvc
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WSDAPI
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\WwanSvc

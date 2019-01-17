@@ -1,0 +1,28 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\AboutURLs
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\ActiveX Compatibility
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\AdvancedOptions
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Application Compatibility
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\AutoComplete
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Capabilities
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Default Behaviors
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Document Caching
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\EdgeDebugActivation
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\EmbedExtnToClsidMappings
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Extension Compatibility
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Feed Discovery
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Image Caching
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\International
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Low Rights
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Migration
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\NavigatorPluginsList
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\P3
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Plugins
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\ProtocolExecute
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Registration
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\SearchScopes
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Security
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Styles
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Transitions
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\UnattendBackup
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\URL Compatibility
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Internet Explorer\Version Vector

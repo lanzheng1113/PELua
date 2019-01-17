@@ -1,0 +1,2 @@
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{8E908FC9-BECC-40f6-915B-F4CA0E70D03D}
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{C555438B-3C23-4769-A71F-B6D3D9B6053A}

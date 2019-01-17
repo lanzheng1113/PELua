@@ -1,0 +1,6 @@
+Windows Registry Editor Version 5.00
+
+[-HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Controls Folder\Device]
+[-HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Controls Folder\Display]
+[-HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Controls Folder\PowerCfg]
+[-HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft\Windows\CurrentVersion\Controls Folder\System]

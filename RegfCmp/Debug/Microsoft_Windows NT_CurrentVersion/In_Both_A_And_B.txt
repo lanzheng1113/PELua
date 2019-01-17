@@ -1,0 +1,32 @@
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\AeDebug
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\ASR
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Compatibility32
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Console
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Drivers32
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\EFS
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Font Drivers
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Font Management
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\FontDPI
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\FontLink
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\FontMapper
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Fonts
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\FontSubstitutes
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\GRE_Initialize
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\IniFileMapping
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\LanguagePack
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\MiniDumpAuxiliaryDlls
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\MTCUVC
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Multimedia
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\NetworkList
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\NtVdm64
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\OEM
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\ProfileList
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\SvcHost
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\SystemRestore
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Time Zones
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\VersionsList
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\WbemPerf
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Windows
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\Winlogon
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\WSService
+HKEY_LOCAL_MACHINE\AANewBee\Microsoft\Windows NT\CurrentVersion\WUDF

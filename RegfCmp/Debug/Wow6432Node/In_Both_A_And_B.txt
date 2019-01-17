@@ -1,0 +1,1 @@
+HKEY_LOCAL_MACHINE\AANewBee\WOW6432Node\Microsoft
