@@ -52,7 +52,7 @@ std::vector<wstring> StringVectorIntersection(const std::vector<wstring>& vA, co
 		sB.insert(make_pair(i,iori));
 	}
 
-	//Z1 = A¡ÉB = {x|x¡ÊA,ÇÒx²»¡ÊB}
+	//Z1 = A¡ÉB = {x|x¡ÊA,ÇÒx¡ÊB}
 	for (auto i : sA)
 	{
 		if (sB.find(i.first) != sB.end())
@@ -99,6 +99,34 @@ std::vector<wstring> StringVectorComplement(const std::vector<wstring>& vA, cons
 	return ret;
 }
 
+LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+{
+	// center the dialog on the screen
+	CenterWindow();
+
+	// set icons
+	HICON hIcon = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON));
+	SetIcon(hIcon, TRUE);
+	HICON hIconSmall = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
+	SetIcon(hIconSmall, FALSE);
+
+	// Load from history.ini
+	CString curPath = Path::getConfigurationDirPath().c_str();
+	TCHAR pA[100] = {0};
+	TCHAR pB[100] = { 0 };
+	GetPrivateProfileString(_T("compare"),_T("PathA"),_T(""),pA, sizeof(pA),curPath+_T("history.ini"));
+	GetPrivateProfileString(_T("compare"), _T("PathB"), _T(""), pB, sizeof(pB), curPath + _T("history.ini"));
+	if (pA[0])
+	{
+		GetDlgItem(IDC_EDIT_REGPATH1).SetWindowText(pA);
+	}
+	if (pB[0])
+	{
+		GetDlgItem(IDC_EDIT_REGPATH2).SetWindowText(pB);
+	}
+	return TRUE;
+}
+
 LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	// TODO: Add validation code 
@@ -106,16 +134,15 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 	CEdit e = GetDlgItem(IDC_EDIT_REGPATH1);
 	ATL::CString strRegPathA;
 	e.GetWindowTextW(strRegPathA);
-	MessageBox(strRegPathA);
 
 	CEdit e2 = GetDlgItem(IDC_EDIT_REGPATH2);
 	ATL::CString strRegPathB;
 	e2.GetWindowTextW(strRegPathB);
-	MessageBox(strRegPathB);
 
 	if (strRegPathA.IsEmpty() || strRegPathB.IsEmpty())
 	{
 		MessageBox(_T("CANNOT BE EMPTY"));
+		return 0;
 	}
 	/*
 	if (IsCompareKeyValue())
@@ -138,7 +165,11 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 			MessageBox(_T("Not support now 2"));
 			return 0;
 		}
-	
+
+		CString curPath = Path::getConfigurationDirPath().c_str();
+		WritePrivateProfileString(_T("compare"), _T("PathA"), (LPCTSTR)strRegPathA, curPath + _T("history.ini"));
+		WritePrivateProfileString(_T("compare"), _T("PathB"), (LPCTSTR)strRegPathB, curPath + _T("history.ini"));
+
 		{
 			// A\B = { x | x¡ÊA,ÇÒx²»¡ÊB }
 			std::vector<std::wstring> v = StringVectorComplement(vA, vB);
@@ -146,7 +177,7 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 			std::string str;
 			for (std::wstring i : v)
 			{
-				str += String::fromStdWString(i);
+				str += String::fromStdWString(wstring((LPCTSTR)strRegPathA) + _T("\\") + i);
 				str += "\n";
 			}
 			//write to file.
@@ -169,7 +200,7 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 			std::string str;
 			for (std::wstring i : v)
 			{
-				str += String::fromStdWString(i);
+				str += String::fromStdWString(wstring((LPCTSTR)strRegPathB) + _T("\\") + i);
 				str += "\n";
 			}
 			//write to file.
@@ -191,7 +222,7 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 			std::string str;
 			for (std::wstring i : v)
 			{
-				str += String::fromStdWString(i);
+				str += String::fromStdWString(wstring((LPCTSTR)strRegPathA) + _T("\\") + i);
 				str += "\n";
 			}
 			//write to file.
@@ -206,6 +237,7 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 			else
 				MessageBox(_T("write data to file failed"));
 		}
+		MessageBox(_T("done!"));
 	}
 	return 0;
 }
