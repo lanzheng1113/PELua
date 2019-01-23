@@ -114,8 +114,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	CString curPath = Path::getConfigurationDirPath().c_str();
 	TCHAR pA[100] = {0};
 	TCHAR pB[100] = { 0 };
-	GetPrivateProfileString(_T("compare"),_T("PathA"),_T(""),pA, sizeof(pA),curPath+_T("history.ini"));
-	GetPrivateProfileString(_T("compare"), _T("PathB"), _T(""), pB, sizeof(pB), curPath + _T("history.ini"));
+	GetPrivateProfileString(_T("compare"),_T("PathA"),_T(""),pA, _countof(pA),curPath+_T("history.ini"));
+	GetPrivateProfileString(_T("compare"), _T("PathB"), _T(""), pB, _countof(pB), curPath + _T("history.ini"));
 	if (pA[0])
 	{
 		GetDlgItem(IDC_EDIT_REGPATH1).SetWindowText(pA);
